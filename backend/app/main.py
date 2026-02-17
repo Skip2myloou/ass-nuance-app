@@ -22,21 +22,20 @@ from app.settings import get_settings
 
 settings = get_settings()
 
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"status": "API is running"}
-
+app = FastAPI(
     title="Nuance Coach API",
     version="0.1.0",
     description="AI assistant for interpreting dating messages and suggesting replies",
 )
 
+@app.get("/")
+def root():
+    return {"status": "API is running"}
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.api_cors_origins,
-    allow_methods=["*"],
+    allow_origins=settings.api_cors_origins,    allow_methods=["*"],
     allow_headers=["*"],
 )
 
