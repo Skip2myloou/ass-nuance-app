@@ -22,7 +22,7 @@ from app.settings import get_settings
 
 settings = get_settings()
 
-app = FastAPI(
+app = FastAPI()
 
 @app.get("/")
 def root():
