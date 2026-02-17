@@ -23,6 +23,11 @@ from app.settings import get_settings
 settings = get_settings()
 
 app = FastAPI(
+
+@app.get("/")
+def root():
+    return {"status": "API is running"}
+
     title="Nuance Coach API",
     version="0.1.0",
     description="AI assistant for interpreting dating messages and suggesting replies",
