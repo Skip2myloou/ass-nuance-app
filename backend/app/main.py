@@ -35,7 +35,8 @@ def root():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.api_cors_origins,    allow_methods=["*"],
+    allow_origins=["*"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
