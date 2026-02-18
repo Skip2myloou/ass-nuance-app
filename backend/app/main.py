@@ -21,7 +21,7 @@ from app.services.prompt_builder import (
 from app.settings import get_settings
 
 settings = get_settings()
-
+print("ANTHROPIC KEY LOADED:", bool(settings.anthropic_api_key))
 app = FastAPI(
     title="Nuance Coach API",
     version="0.1.0",
