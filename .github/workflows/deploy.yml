@@ -1,0 +1,34 @@
+name: Auto Deploy to Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Trigger Backend Deploy
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          https://api.render.com/v1/services/${{ secrets.RENDER_BACKEND_ID }}/deploys
+
+      - name: Trigger Frontend Deploy
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          https://api.render.com/v1/services/${{ secrets.RENDER_FRONTEND_ID }}/deploys
+
+      - name: Wait for backend
+        run: sleep 30
+
+      - name: Health Check Backend
+        run: |
+          curl -f https://ass-nuance-app.onrender.com/ || exit 1
+
