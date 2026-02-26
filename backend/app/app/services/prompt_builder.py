@@ -112,49 +112,13 @@ Include at least one literal reading.
 If ambiguity exists, include at least one plausible subtext reading."""
 
 
-def build_interpret_prompt(text: str, state: str = "calm") -> tuple[str, str]:
+def build_interpret_prompt(text: str) -> tuple[str, str]:
     """Return (system_prompt, user_prompt) for the interpret endpoint."""
+    return _INTERPRET_SYSTEM, _INTERPRET_USER.format(text=text)
 
-    state_guidance = ""
 
-    if state == "tense":
-        state_guidance = (
-            "\nUSER_STATE: tense\n"
-            "The user feels somewhat tense or doubtful. "
-            "Increase normalization slightly. Avoid strong conclusions. "
-            "Keep confidence levels closer together.\n"
-        )
-    elif state == "overstimulated":
-        state_guidance = (
-            "\nUSER_STATE: overstimulated\n"
-            "The user feels overstimulated. "
-            "Keep explanations shorter. Limit possible_meanings to maximum 2. "
-            "Use very calm, grounded tone. Emphasize ambiguity as normal.\n"
-        )
-    else:
-        state_guidance = "\nUSER_STATE: calm\nRespond normally.\n"
-
-    system_prompt = _INTERPRET_SYSTEM + state_guidance
-    user_prompt = _INTERPRET_USER.format(text=text)
-
-    return system_prompt, user_prompt
-
-def parse_interpret_response(raw: str, state: str = "calm") -> InterpretResponse:
+def parse_interpret_response(raw: str) -> InterpretResponse:
     data = _safe_parse_json(raw)
-
-    print("STATE IN PARSER:", state)
-
-    # 🔹 Enforce calmer UX for overstimulated users
-    if state == "overstimulated":
-        # Limit to max 2 interpretations
-        if "possible_meanings" in data:
-            data["possible_meanings"] = data["possible_meanings"][:2]
-
-        # Shorten regulation text slightly
-        if "regulation" in data and isinstance(data["regulation"], str):
-            sentences = data["regulation"].split(". ")
-            data["regulation"] = ". ".join(sentences[:2]).strip()
-
     try:
         return InterpretResponse(**data)
     except ValidationError as exc:

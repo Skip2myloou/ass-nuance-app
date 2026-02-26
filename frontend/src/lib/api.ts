@@ -75,10 +75,12 @@ async function post<T>(path: string, body: Record<string, unknown>): Promise<T> 
 
 // ── Public API ─────────────────────────────────────────────────
 
-export function interpret(text: string): Promise<InterpretResult> {
-  return post<InterpretResult>("/api/interpret", { text });
+export function interpret(
+  text: string,
+  state: "calm" | "tense" | "overstimulated"
+): Promise<InterpretResult> {
+  return post<InterpretResult>("/api/interpret", { text, state });
 }
-
 export function replies(text: string, goal: string): Promise<RepliesResult> {
   return post<RepliesResult>("/api/replies", { text, goal });
 }

@@ -19,6 +19,9 @@ export default function Home() {
         <Link href="/style" className="btn btn-outline btn-big">
           Beschrijf je stijl
         </Link>
+        <Link href="/checkin" className="btn btn-outline btn-big">
+          Check-in
+        </Link>
       </div>
     </main>
   );

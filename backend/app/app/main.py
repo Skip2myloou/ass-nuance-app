@@ -57,9 +57,10 @@ async def health_check():
 
 @app.post("/api/interpret", response_model=InterpretResponse)
 async def interpret_message(req: InterpretRequest):
-    system_prompt, user_prompt = build_interpret_prompt(req.text, req.state)
+    """Analyse a dating message: literal summary, possible meanings, tone, next steps."""
+    system_prompt, user_prompt = build_interpret_prompt(req.text)
     raw = await call_claude(system_prompt, user_prompt)
-    return parse_interpret_response(raw, req.state)
+    return parse_interpret_response(raw)
 
 
 # ── Replies ─────────────────────────────────────────────────────

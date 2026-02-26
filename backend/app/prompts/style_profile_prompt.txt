@@ -1,0 +1,16 @@
+We want to generate a clear description of a user’s preferred online communication style.
+
+Use these guidelines to produce a concise personal style statement:
+
+Style factors to ask/consider:
+- Do you prefer literal and direct phrasing?
+- Do you like time to process before replying?
+- Is clarity more important than finesse?
+- Do you prefer short or detailed messages?
+- Do you want to state expectations clearly?
+
+Output:
+Give a short paragraph the user can use to explain their communication preferences without mentioning diagnoses.
+
+Example:
+“Hi, I communicate in a direct and clear way. I prefer written text so I have time to think before replying. I find implicit hints hard to interpret and appreciate straightforward language with concrete details and expectations.”

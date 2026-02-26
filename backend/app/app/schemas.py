@@ -14,10 +14,7 @@ class InterpretRequest(BaseModel):
         strip_whitespace=True,
         examples=["Hey, wil je vanavond iets drinken? 😊"],
     )
-    state: Literal["calm", "tense", "overstimulated"] = Field(
-        default="calm",
-        description="User's current regulation state before interpreting the message.",
-    )
+
 
 class PossibleMeaning(BaseModel):
     meaning: str
