@@ -1,9 +1,8 @@
 """Anthropic Claude API client with timeout and single-retry."""
 
 import anthropic
-from fastapi import HTTPException
-
 from app.settings import get_settings
+from fastapi import HTTPException
 
 _client: anthropic.AsyncAnthropic | None = None
 

@@ -1,9 +1,8 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
 from app.schemas import (
     InterpretRequest,
     InterpretResponse,
+    RefineRequest,
+    RefineResponse,
     RepliesRequest,
     RepliesResponse,
     StyleRequest,
@@ -12,35 +11,47 @@ from app.schemas import (
 from app.services.claude import call_claude
 from app.services.prompt_builder import (
     build_interpret_prompt,
+    build_refine_prompt,
     build_replies_prompt,
     build_style_prompt,
     parse_interpret_response,
+    parse_refine_response,
     parse_replies_response,
     parse_style_response,
 )
 from app.settings import get_settings
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 settings = get_settings()
 print("ANTHROPIC KEY LOADED:", bool(settings.anthropic_api_key))
+
+# ── Rate limiter (30 req/min per IP across all AI endpoints) ────
+limiter = Limiter(key_func=get_remote_address, default_limits=["30/minute"])
+
 app = FastAPI(
-    title="Nuance Coach API",
+    title="LiteralPause API",
     version="0.1.0",
     description="AI assistant for interpreting dating messages and suggesting replies",
 )
 
-@app.get("/")
-def root():
-    return {"status": "API is running"}
-
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.api_cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# TODO: add rate limiting middleware (e.g. slowapi) — cap per-IP to ~20 req/min
+
+@app.get("/")
+def root():
+    return {"status": "API is running"}
 
 
 # ── Health ──────────────────────────────────────────────────────
@@ -52,33 +63,46 @@ async def health_check():
 
 
 # ── Interpret ───────────────────────────────────────────────────
-# TODO: rate-limit this endpoint separately (~10 req/min per user)
 
 
 @app.post("/api/interpret", response_model=InterpretResponse)
-async def interpret_message(req: InterpretRequest):
+@limiter.limit("30/minute")
+async def interpret_message(request: Request, req: InterpretRequest):
     system_prompt, user_prompt = build_interpret_prompt(req.text, req.state)
     raw = await call_claude(system_prompt, user_prompt)
     return parse_interpret_response(raw, req.state)
 
 
 # ── Replies ─────────────────────────────────────────────────────
-# TODO: rate-limit this endpoint separately (~10 req/min per user)
 
 
 @app.post("/api/replies", response_model=RepliesResponse)
-async def suggest_replies(req: RepliesRequest):
+@limiter.limit("30/minute")
+async def suggest_replies(request: Request, req: RepliesRequest):
     """Generate safe reply options given a dating message and the user's goal."""
     system_prompt, user_prompt = build_replies_prompt(req.text, req.goal)
     raw = await call_claude(system_prompt, user_prompt)
     return parse_replies_response(raw)
 
 
+# ── Refine ─────────────────────────────────────────────────────
+
+
+@app.post("/api/refine", response_model=RefineResponse)
+@limiter.limit("30/minute")
+async def refine_reply(request: Request, req: RefineRequest):
+    """Refine the user's draft reply and return feedback + improved version."""
+    system_prompt, user_prompt = build_refine_prompt(req.text, req.draft, req.goal)
+    raw = await call_claude(system_prompt, user_prompt)
+    return parse_refine_response(raw)
+
+
 # ── Style ──────────────────────────────────────────────────────
 
 
 @app.post("/api/style", response_model=StyleResponse)
-async def generate_style(req: StyleRequest):
+@limiter.limit("30/minute")
+async def generate_style(request: Request, req: StyleRequest):
     """Generate a natural explanation of communication preferences."""
     system_prompt, user_prompt = build_style_prompt(req.preferences)
     raw = await call_claude(system_prompt, user_prompt)

@@ -11,6 +11,7 @@ import {
   getMostRecent,
   timeAgo,
 } from "@/lib/checkin";
+import { CHECKIN, BACK } from "@/lib/constants";
 
 const ONBOARDING_KEY = "nn_onboarding_seen";
 
@@ -25,9 +26,7 @@ export default function CheckinPage() {
   useEffect(() => {
     setPrevEntry(getMostRecent());
     const seen = localStorage.getItem(ONBOARDING_KEY);
-    if (!seen) {
-      setShowOnboarding(true);
-    }
+    if (!seen) setShowOnboarding(true);
   }, []);
 
   function dismissOnboarding() {
@@ -36,9 +35,7 @@ export default function CheckinPage() {
   }
 
   function handleSliderChange(newValue: number) {
-    if (newValue !== regulationValue) {
-      setSelectedLabel(null);
-    }
+    if (newValue !== regulationValue) setSelectedLabel(null);
     setRegulationValue(newValue);
   }
 
@@ -53,37 +50,39 @@ export default function CheckinPage() {
     setPrevEntry(entry);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
-    // 🔥 Direct naar reply met state
     router.push(`/reply?state=${selectedLabel}`);
- }
+  }
+
+  const ob = CHECKIN.onboarding;
 
   return (
     <>
+      {/* ── Onboarding modal ── */}
       {showOnboarding && (
         <div className="onboarding-overlay">
           <div className="onboarding-modal">
-            <h2>Dit is je regulatiekompas</h2>
-            <p>
-              Links is vertraging of afsluiting. Midden is in balans. Rechts is
-              oplopende spanning of overbelasting.
-            </p>
+            <div className="t-label" style={{ marginBottom: 12, textAlign: "center" }}>
+              {ob.eyebrow}
+            </div>
+            <h2>{ob.heading}</h2>
+            <p>{ob.body}</p>
             <button
               type="button"
               className="btn btn-primary"
               onClick={dismissOnboarding}
             >
-              Begrepen
+              {ob.cta}
             </button>
           </div>
         </div>
       )}
 
       <main className="container checkin-page">
-        <Link href="/" className="back">
-          &larr; Terug
-        </Link>
-        <h1>Waar zit je systeem nu?</h1>
-        <p className="subtitle">Schuif de slider naar waar je je nu bevindt.</p>
+        <Link href="/" className="back">{BACK.toHome}</Link>
+
+        <div className="t-label" style={{ marginBottom: 10 }}>{CHECKIN.eyebrow}</div>
+        <h1>Waar zit je <em>{CHECKIN.headingEm}</em> nu?</h1>
+        <p className="subtitle">{CHECKIN.subtitle}</p>
 
         <RegulationSlider value={regulationValue} onChange={handleSliderChange} />
 
@@ -100,19 +99,19 @@ export default function CheckinPage() {
             disabled={selectedLabel === null}
             onClick={handleSave}
           >
-            {saved ? "Opgeslagen!" : "Opslaan"}
+            {saved ? CHECKIN.saveBusy : CHECKIN.saveIdle}
           </button>
 
           {prevEntry && (
             <p className="prev-checkin-note">
-              Vorige check-in: {prevEntry.label} – {timeAgo(prevEntry.timestamp)}
+              {CHECKIN.prevNote} <strong>{prevEntry.label}</strong> – {timeAgo(prevEntry.timestamp)}
             </p>
           )}
         </div>
 
-        <div style={{ marginTop: "1.5rem", textAlign: "center" }}>
+        <div style={{ marginTop: 24, textAlign: "center" }}>
           <Link href="/checkin/history" className="back">
-            Bekijk geschiedenis &rarr;
+            {CHECKIN.historyLink}
           </Link>
         </div>
       </main>

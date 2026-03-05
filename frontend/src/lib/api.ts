@@ -40,6 +40,11 @@ export interface StyleResult {
   variants: StyleVariant[];
 }
 
+export interface RefineResult {
+  feedback: string;
+  improved: string;
+}
+
 // ── API error ──────────────────────────────────────────────────
 
 export class ApiError extends Error {
@@ -65,6 +70,9 @@ async function post<T>(path: string, body: Record<string, unknown>): Promise<T> 
   }
 
   if (!res.ok) {
+    if (res.status === 429) {
+      throw new ApiError(429, "Te veel verzoeken. Wacht even en probeer het opnieuw.");
+    }
     const data = await res.json().catch(() => null);
     const detail = data?.detail ?? `Server error (${res.status})`;
     throw new ApiError(res.status, detail);
@@ -87,4 +95,12 @@ export function replies(text: string, goal: string): Promise<RepliesResult> {
 
 export function style(preferences: string[]): Promise<StyleResult> {
   return post<StyleResult>("/api/style", { preferences });
+}
+
+export function refine(
+  text: string,
+  draft: string,
+  goal: string
+): Promise<RefineResult> {
+  return post<RefineResult>("/api/refine", { text, draft, goal });
 }

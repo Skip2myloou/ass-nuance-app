@@ -1,0 +1,33 @@
+repos:
+  # Python: import fouten, ongebruikte imports, verkeerde paden
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # Python: type checking — vangt Field/schema mismatches
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.360
+    hooks:
+      - id: pyright
+        args: [--project, backend]
+
+  # Voorkom dat je twee schemas.py bestanden met conflicterende imports hebt
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+
+# Installeren:
+# pip install pre-commit
+# pre-commit install
+#
+# Handmatig draaien op alles:
+# pre-commit run --all-files

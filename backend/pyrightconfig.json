@@ -1,0 +1,14 @@
+{
+  "include": ["app"],
+  "exclude": ["**/node_modules", "**/__pycache__"],
+  "typeCheckingMode": "basic",
+  "pythonVersion": "3.11",
+  "reportMissingImports": false,
+  "reportMissingModuleSource": false,
+  "reportImportCycles": true,
+  "reportDuplicateImport": true,
+  "reportOptionalMemberAccess": true,
+  "reportArgumentType": true,
+  "reportReturnType": true,
+  "reportAttributeAccessIssue": true
+}

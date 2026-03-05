@@ -1,4 +1,4 @@
-name: Auto Deploy to Render
+name: Deploy to Render
 
 on:
   push:
@@ -10,25 +10,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Trigger Backend Deploy
+      # --- Backend checks ---
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend dependencies
         run: |
-          curl -X POST \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          https://api.render.com/v1/services/${{ secrets.RENDER_BACKEND_ID }}/deploys
+          pip install -r backend/requirements.txt
+          pip install ruff pyright
 
-      - name: Trigger Frontend Deploy
+      - name: Lint backend (ruff)
+        run: ruff check backend/
+
+      - name: Type check backend (pyright)
+        run: pyright backend/
+
+      # --- Frontend checks ---
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install frontend dependencies
+        run: npm install --prefix frontend
+
+      - name: Type check frontend (tsc)
+        run: npx --prefix frontend tsc --noEmit
+
+      # --- Deploy naar Render ---
+      # Alleen als alle checks slagen
+      - name: Trigger Render deploy — backend
         run: |
-          curl -X POST \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          https://api.render.com/v1/services/${{ secrets.RENDER_FRONTEND_ID }}/deploys
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}"
 
-      - name: Wait for backend
-        run: sleep 30
-
-      - name: Health Check Backend
+      - name: Trigger Render deploy — frontend
         run: |
-          curl -f https://ass-nuance-app.onrender.com/ || exit 1
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}"
 
+# Setup:
+# 1. Ga naar Render dashboard → jouw service → Settings → Deploy Hook
+# 2. Kopieer de URL
+# 3. Ga naar GitHub repo → Settings → Secrets → Actions
+# 4. Voeg toe:
+#    RENDER_DEPLOY_HOOK_BACKEND  = [jouw backend hook URL]
+#    RENDER_DEPLOY_HOOK_FRONTEND = [jouw frontend hook URL]
+#
+# Daarna: elke push naar main → checks → deploy. Automatisch.

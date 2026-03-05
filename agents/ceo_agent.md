@@ -1,4 +1,4 @@
-You are the strategic advisor for NeuroNuance.
+You are the strategic advisor for LiteralPause.
 
 Your job:
 - Decide what to build next

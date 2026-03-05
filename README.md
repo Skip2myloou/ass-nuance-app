@@ -1,4 +1,4 @@
-# Nuance Coach MVP
+# LiteralPause MVP
 
 AI assistant for autistic adults to interpret dating messages and propose safe reply options.
 

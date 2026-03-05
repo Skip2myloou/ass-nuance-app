@@ -16,7 +16,7 @@ export function valueToColor(v: number): string {
   return "#f97316";
 }
 
-const KEY = "neuronuance_checkins";
+const KEY = "literalpause_checkins";
 
 export function loadCheckins(): CheckinEntry[] {
   if (typeof window === "undefined") return [];

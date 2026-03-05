@@ -2,7 +2,6 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-
 # ── /api/interpret ──────────────────────────────────────────────
 
 
@@ -18,6 +17,7 @@ class InterpretRequest(BaseModel):
         default="calm",
         description="User's current regulation state before interpreting the message.",
     )
+
 
 class PossibleMeaning(BaseModel):
     meaning: str
@@ -61,11 +61,45 @@ class RepliesRequest(BaseModel):
 class ReplyOption(BaseModel):
     style: Literal["direct", "warm", "playful"]
     message: str
-    impact_label: str = Field(..., max_length=50)
+    impact_label: str = Field(..., max_length=120)
 
 
 class RepliesResponse(BaseModel):
     options: list[ReplyOption]
+
+
+# ── /api/refine ─────────────────────────────────────────────────
+
+
+class RefineRequest(BaseModel):
+    text: str = Field(
+        ...,
+        min_length=1,
+        max_length=5000,
+        strip_whitespace=True,
+        description="The original received message.",
+    )
+    draft: str = Field(
+        ...,
+        min_length=1,
+        max_length=2000,
+        strip_whitespace=True,
+        description="The user's draft reply to refine.",
+    )
+    goal: str = Field(
+        ...,
+        min_length=1,
+        max_length=500,
+        strip_whitespace=True,
+        description="What the user wants to achieve with their reply.",
+    )
+
+
+class RefineResponse(BaseModel):
+    feedback: str = Field(
+        ..., description="Short, kind feedback on the draft (1-3 sentences)."
+    )
+    improved: str = Field(..., description="An improved version of the draft.")
 
 
 # ── /api/style ─────────────────────────────────────────────────

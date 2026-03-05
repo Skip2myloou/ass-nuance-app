@@ -3,25 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { style, type StyleResult, ApiError } from "@/lib/api";
-
-const PREFERENCES = [
-  "Duidelijke vragen met opties",
-  "Expliciete intenties",
-  "Korte concrete zinnen",
-  "Geen verborgen verwachtingen",
-];
-
-const TONE_LABELS: Record<string, string> = {
-  direct: "Direct",
-  warm: "Warm",
-  playful: "Speels",
-};
-
-const TONE_EMOJI: Record<string, string> = {
-  direct: "\uD83C\uDFAF",
-  warm: "\u2764\uFE0F",
-  playful: "\uD83D\uDE0F",
-};
+import { STYLE_PAGE, STYLE_LABELS, STYLE_EMOJI, BACK } from "@/lib/constants";
 
 export default function StylePage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -33,11 +15,8 @@ export default function StylePage() {
   function togglePreference(pref: string) {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(pref)) {
-        next.delete(pref);
-      } else {
-        next.add(pref);
-      }
+      if (next.has(pref)) next.delete(pref);
+      else next.add(pref);
       return next;
     });
   }
@@ -45,20 +24,16 @@ export default function StylePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (selected.size === 0) return;
-
     setLoading(true);
     setError("");
     setResult(null);
     setCopied(null);
-
     try {
       const data = await style(Array.from(selected));
       setResult(data);
     } catch (err) {
       setError(
-        err instanceof ApiError
-          ? err.message
-          : "Er ging iets mis. Probeer het opnieuw."
+        err instanceof ApiError ? err.message : STYLE_PAGE.errorGeneric
       );
     } finally {
       setLoading(false);
@@ -73,81 +48,78 @@ export default function StylePage() {
 
   return (
     <main className="container">
-      <Link href="/" className="back">
-        &larr; Terug
-      </Link>
-      <h1>Beschrijf je stijl</h1>
-      <p className="subtitle">
-        Kies je communicatievoorkeuren. We maken een natuurlijke uitleg die je
-        kunt delen met een match.
-      </p>
+      <Link href="/" className="back">{BACK.toHome}</Link>
 
-      {/* ── Preference checkboxes ───────────────────────────────── */}
+      <div className="t-label" style={{ marginBottom: 10 }}>{STYLE_PAGE.eyebrow}</div>
+      <h1>Beschrijf je <em>{STYLE_PAGE.headingEm}</em></h1>
+      <p className="subtitle">{STYLE_PAGE.subtitle}</p>
+
       <form onSubmit={handleSubmit}>
-        <fieldset style={{ border: "none", padding: 0 }}>
-          <legend
-            style={{
-              fontSize: "0.9rem",
-              fontWeight: 500,
-              color: "var(--fg-muted)",
-              marginBottom: "0.5rem",
-            }}
-          >
-            Mijn voorkeuren
+        <fieldset style={{ border: "none", padding: 0, marginBottom: 20 }}>
+          <legend className="t-label" style={{ marginBottom: 14 }}>
+            {STYLE_PAGE.preferencesLegend}
           </legend>
-          {PREFERENCES.map((pref) => (
-            <label
-              key={pref}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.5rem 0",
-                cursor: "pointer",
-                fontSize: "0.95rem",
-                color: "var(--fg)",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={selected.has(pref)}
-                onChange={() => togglePreference(pref)}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {STYLE_PAGE.preferences.map((pref) => (
+              <label
+                key={pref}
                 style={{
-                  width: "1.1rem",
-                  height: "1.1rem",
-                  accentColor: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "14px 16px",
+                  background: selected.has(pref) ? "var(--accent-light)" : "var(--surface)",
+                  border: `1.5px solid ${selected.has(pref) ? "var(--accent-glow)" : "rgba(0,0,0,0.08)"}`,
+                  borderRadius: "var(--radius-md)",
+                  cursor: "pointer",
+                  fontSize: 15,
+                  fontWeight: selected.has(pref) ? 600 : 400,
+                  color: selected.has(pref) ? "var(--accent)" : "var(--ink-700)",
+                  transition: "all 220ms cubic-bezier(0.22,1,0.36,1)",
+                  boxShadow: "var(--shadow-xs)",
                 }}
-              />
-              {pref}
-            </label>
-          ))}
+              >
+                <input
+                  type="checkbox"
+                  checked={selected.has(pref)}
+                  onChange={() => togglePreference(pref)}
+                />
+                {pref}
+              </label>
+            ))}
+          </div>
         </fieldset>
 
         <button
           type="submit"
           className="btn btn-primary"
           disabled={loading || selected.size === 0}
-          style={{ marginTop: "1rem" }}
+          style={{ width: "100%" }}
         >
-          {loading ? "Bezig met schrijven..." : "Genereer uitleg"}
+          {loading ? (
+            <><span className="spinner" />{STYLE_PAGE.submitBusy}</>
+          ) : STYLE_PAGE.submitIdle}
         </button>
       </form>
 
       {error && <p className="error">{error}</p>}
 
       {loading && (
-        <p className="loading">Even geduld, we schrijven varianten...</p>
+        <p className="loading">
+          <span className="spinner" />
+          {STYLE_PAGE.loadingText}
+        </p>
       )}
 
-      {/* ── Results ─────────────────────────────────────────────── */}
       {result && (
-        <section>
-          <h2>Jouw stijl in woorden</h2>
+        <section style={{ marginTop: 24 }}>
+          <h2>{STYLE_PAGE.resultsHeading}</h2>
 
           {result.variants.map((v, i) => (
-            <div key={i} className="card">
+            <div key={i} className="card" style={{ animationDelay: `${i * 60}ms` }}>
               <div className="card-label">
-                {TONE_EMOJI[v.tone] ?? ""} {TONE_LABELS[v.tone] ?? v.tone}
+                {STYLE_EMOJI[v.tone] ?? ""} {STYLE_LABELS[v.tone] ?? v.tone}
               </div>
               <div className="card-body">{v.message}</div>
               <div className="card-footer">
@@ -157,7 +129,7 @@ export default function StylePage() {
                   onClick={() => handleCopy(v.message, i)}
                   className="btn btn-outline btn-sm"
                 >
-                  {copied === i ? "Gekopieerd!" : "Kopieer"}
+                  {copied === i ? "✓ Gekopieerd" : "Kopieer"}
                 </button>
               </div>
             </div>
