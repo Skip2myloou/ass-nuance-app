@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         Privacybeleid
       </h1>
       <p style={{ color: "var(--ink-500)", fontSize: 14, marginBottom: 40 }}>
-        Laatst bijgewerkt: maart 2025
+        Laatst bijgewerkt: maart 2026
       </p>
 
       <section style={{ marginBottom: 36 }}>
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
         <p>
           Heb je een vraag over je privacy of wil je dat we iets verwijderen?
           Stuur een e-mail naar{" "}
-          <a href="mailto:privacy@literalpause.com">privacy@literalpause.com</a>.
+          <a href="mailto:privacy@literalpause.nl">privacy@literalpause.nl</a>.
           We reageren binnen vijf werkdagen.
         </p>
       </section>
