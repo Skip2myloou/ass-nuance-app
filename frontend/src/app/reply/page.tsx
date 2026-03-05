@@ -1,6 +1,6 @@
 "use client";
 
-import Card from "../../components/Card.tsx";
+import Card from "../../components/Card";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
