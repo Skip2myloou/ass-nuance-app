@@ -40,7 +40,7 @@ jobs:
         run: npm install --prefix frontend
 
       - name: Type check frontend (tsc)
-        run: npx --prefix frontend tsc --noEmit
+        run: cd frontend && npx tsc --noEmit
 
       # --- Deploy naar Render ---
       # Alleen als alle checks slagen
