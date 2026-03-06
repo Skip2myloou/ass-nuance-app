@@ -5,31 +5,31 @@ import { analyzeLens, LensReading, LensResult } from "@/lib/api";
 
 const LENS_CONFIG: Record<
   LensReading["lens"],
-  { label: string; accent: string; border: string; bg: string }
+  { label: string; color: string; bg: string; border: string }
 > = {
   "Literal lens": {
     label: "Letterlijk",
-    accent: "text-blue-700",
-    border: "border-blue-300",
-    bg: "bg-blue-50",
+    color: "#1d4ed8",
+    bg: "rgba(59,130,246,0.06)",
+    border: "rgba(59,130,246,0.30)",
   },
   "Threat lens": {
     label: "Dreiging",
-    accent: "text-red-700",
-    border: "border-red-300",
-    bg: "bg-red-50",
+    color: "#b91c1c",
+    bg: "rgba(239,68,68,0.06)",
+    border: "rgba(239,68,68,0.30)",
   },
   "Social reading lens": {
     label: "Sociaal",
-    accent: "text-green-700",
-    border: "border-green-300",
-    bg: "bg-green-50",
+    color: "#15803d",
+    bg: "rgba(34,197,94,0.06)",
+    border: "rgba(34,197,94,0.30)",
   },
   "Romantic lens": {
     label: "Romantisch",
-    accent: "text-purple-700",
-    border: "border-purple-300",
-    bg: "bg-purple-50",
+    color: "#7e22ce",
+    bg: "rgba(168,85,247,0.06)",
+    border: "rgba(168,85,247,0.30)",
   },
 };
 
@@ -74,106 +74,119 @@ export default function LensPage() {
     : {};
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-10">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="mb-2 text-2xl font-bold text-gray-900">LensLab</h1>
-        <p className="mb-6 text-gray-600">
-          Bekijk een bericht door vier verschillende lenzen.
-        </p>
+    <div className="container">
+      <h1>LensLab</h1>
+      <p className="subtitle">Bekijk een bericht door vier verschillende lenzen.</p>
 
-        <form onSubmit={handleSubmit} className="mb-8">
-          <label
-            htmlFor="message"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
-            Bericht
-          </label>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="message">Bericht</label>
           <textarea
             id="message"
+            className="textarea"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             maxLength={MAX}
             rows={4}
             placeholder="Plak hier het bericht dat je wilt analyseren…"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
             disabled={loading}
           />
-          <div className="mt-1 flex items-center justify-between">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 8,
+            }}
+          >
             <span
-              className={`text-xs ${
-                remaining < 50 ? "text-red-500" : "text-gray-400"
-              }`}
+              className="helper-text"
+              style={{ color: remaining < 50 ? "var(--red)" : undefined }}
             >
               {remaining} tekens over
             </span>
             <button
               type="submit"
+              className="btn btn-primary"
               disabled={loading || !message.trim()}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "Analyseren…" : "Analyseer"}
+              {loading ? (
+                <>
+                  <span className="spinner" />
+                  Analyseren…
+                </>
+              ) : (
+                "Analyseer"
+              )}
             </button>
           </div>
-        </form>
+        </div>
+      </form>
 
-        {error && (
-          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </div>
-        )}
+      {error && <div className="error">{error}</div>}
 
-        {loading && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {LENS_ORDER.map((lens) => {
-              const cfg = LENS_CONFIG[lens];
-              return (
+      {(loading || result) && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 12,
+            marginTop: 24,
+          }}
+          className="lens-grid"
+        >
+          {LENS_ORDER.map((lens) => {
+            const cfg = LENS_CONFIG[lens];
+            const reading = readingsByLens[lens];
+            return (
+              <div
+                key={lens}
+                className="card"
+                style={{
+                  background: cfg.bg,
+                  borderColor: cfg.border,
+                  marginBottom: 0,
+                }}
+              >
                 <div
-                  key={lens}
-                  className={`rounded-xl border ${cfg.border} ${cfg.bg} p-4`}
+                  className="card-label"
+                  style={{ color: cfg.color }}
                 >
-                  <div
-                    className={`mb-2 text-xs font-semibold uppercase tracking-wide ${cfg.accent}`}
-                  >
-                    {cfg.label}
-                  </div>
-                  <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
-                  <div className="mt-2 h-4 w-full animate-pulse rounded bg-gray-200" />
-                  <div className="mt-2 h-4 w-2/3 animate-pulse rounded bg-gray-200" />
+                  {cfg.label}
                 </div>
-              );
-            })}
-          </div>
-        )}
-
-        {result && !loading && (
-          <>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {LENS_ORDER.map((lens) => {
-                const cfg = LENS_CONFIG[lens];
-                const reading = readingsByLens[lens];
-                return (
-                  <div
-                    key={lens}
-                    className={`rounded-xl border ${cfg.border} ${cfg.bg} p-4`}
-                  >
-                    <div
-                      className={`mb-2 text-xs font-semibold uppercase tracking-wide ${cfg.accent}`}
-                    >
-                      {cfg.label}
-                    </div>
-                    <p className="text-sm leading-relaxed text-gray-800">
-                      {reading ?? "—"}
-                    </p>
+                {loading ? (
+                  <div className="card-body loading">
+                    <span className="dot-pulse">Laden</span>
                   </div>
-                );
-              })}
-            </div>
-            <p className="mt-6 text-center text-sm text-gray-500">
-              Vier lezingen. Welke herkent jij?
-            </p>
-          </>
-        )}
-      </div>
-    </main>
+                ) : (
+                  <p className="card-body">{reading ?? "—"}</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {result && !loading && (
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: 24,
+            fontSize: 14,
+            color: "var(--ink-500)",
+          }}
+        >
+          Vier lezingen. Welke herkent jij?
+        </p>
+      )}
+
+      <style>{`
+        @media (max-width: 600px) {
+          .lens-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+    </div>
   );
 }
