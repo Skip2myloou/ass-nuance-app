@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 # ── /api/interpret ──────────────────────────────────────────────
 
@@ -121,3 +121,34 @@ class StyleVariant(BaseModel):
 
 class StyleResponse(BaseModel):
     variants: list[StyleVariant]
+
+
+# ── /lens/analyze ───────────────────────────────────────────────
+
+
+class MessageInput(BaseModel):
+    message: str
+
+    @field_validator("message")
+    @classmethod
+    def message_not_empty(cls, v: str) -> str:
+        v = v.strip()
+        if len(v) < 3:
+            raise ValueError("Message too short to analyze")
+        if len(v) > 500:
+            raise ValueError("Message too long — max 500 characters")
+        return v
+
+
+class LensReading(BaseModel):
+    lens: Literal[
+        "Literal lens",
+        "Threat lens",
+        "Social reading lens",
+        "Romantic lens",
+    ]
+    reading: str
+
+
+class LensResult(BaseModel):
+    readings: list[LensReading]

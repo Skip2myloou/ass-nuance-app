@@ -1,6 +1,8 @@
 from app.schemas import (
     InterpretRequest,
     InterpretResponse,
+    LensResult,
+    MessageInput,
     RefineRequest,
     RefineResponse,
     RepliesRequest,
@@ -8,6 +10,7 @@ from app.schemas import (
     StyleRequest,
     StyleResponse,
 )
+from app.services.lenslab import analyze
 from app.services.claude import call_claude
 from app.services.prompt_builder import (
     build_interpret_prompt,
@@ -107,3 +110,13 @@ async def generate_style(request: Request, req: StyleRequest):
     system_prompt, user_prompt = build_style_prompt(req.preferences)
     raw = await call_claude(system_prompt, user_prompt)
     return parse_style_response(raw)
+
+
+# ── LensLab ─────────────────────────────────────────────────────
+
+
+@app.post("/lens/analyze", response_model=LensResult)
+@limiter.limit("20/minute")
+async def analyze_message(request: Request, body: MessageInput) -> LensResult:
+    """Show a message through four cognitive lenses."""
+    return await analyze(body.message)

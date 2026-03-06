@@ -104,3 +104,18 @@ export function refine(
 ): Promise<RefineResult> {
   return post<RefineResult>("/api/refine", { text, draft, goal });
 }
+
+// ── LensLab ─────────────────────────────────────────────────
+
+export interface LensReading {
+  lens: "Literal lens" | "Threat lens" | "Social reading lens" | "Romantic lens";
+  reading: string;
+}
+
+export interface LensResult {
+  readings: LensReading[];
+}
+
+export function analyzeLens(message: string): Promise<LensResult> {
+  return post<LensResult>("/lens/analyze", { message });
+}
