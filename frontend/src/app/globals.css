@@ -1287,3 +1287,17 @@ input[type="radio"] {
   .lp-actions { flex-direction: column; }
   .lp-actions .btn { width: 100%; }
 }
+
+/* =============================== */
+/* LENS GRID (LensLab tool page)   */
+/* =============================== */
+.lens-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .lens-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

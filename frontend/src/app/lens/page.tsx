@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 import {
   analyzeLens,
   realityCheck,
@@ -11,12 +11,12 @@ import {
 
 const LENS_CONFIG: Record<
   LensReading["lens"],
-  { label: string; bgClass: string; borderClass: string; textClass: string }
+  { label: string; cardStyle: CSSProperties; labelStyle: CSSProperties }
 > = {
-  "Literal lens":       { label: "Letterlijk", bgClass: "bg-blue-50",   borderClass: "border-blue-200",   textClass: "text-blue-600" },
-  "Threat lens":        { label: "Dreiging",   bgClass: "bg-red-50",    borderClass: "border-red-200",    textClass: "text-red-600" },
-  "Social reading lens":{ label: "Sociaal",    bgClass: "bg-green-50",  borderClass: "border-green-200",  textClass: "text-green-600" },
-  "Romantic lens":      { label: "Romantisch", bgClass: "bg-purple-50", borderClass: "border-purple-200", textClass: "text-purple-600" },
+  "Literal lens":        { label: "Letterlijk", cardStyle: { background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 16, padding: 20 }, labelStyle: { color: "#2563EB", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8, display: "block" } },
+  "Threat lens":         { label: "Dreiging",   cardStyle: { background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 16, padding: 20 }, labelStyle: { color: "#DC2626", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8, display: "block" } },
+  "Social reading lens": { label: "Sociaal",    cardStyle: { background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: 16, padding: 20 }, labelStyle: { color: "#16A34A", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8, display: "block" } },
+  "Romantic lens":       { label: "Romantisch", cardStyle: { background: "#FAF5FF", border: "1px solid #E9D5FF", borderRadius: 16, padding: 20 }, labelStyle: { color: "#9333EA", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8, display: "block" } },
 };
 
 const LENS_ORDER: LensReading["lens"][] = [
@@ -160,19 +160,15 @@ export default function LensPage() {
       {error && <div className="error">{error}</div>}
 
       {(loading || result) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <div className="lens-grid">
           {LENS_ORDER.map((lens) => {
             const cfg = LENS_CONFIG[lens];
             const reading = readingsByLens[lens];
             return (
-              <div
-                key={lens}
-                className={`card ${cfg.bgClass} ${cfg.borderClass}`}
-                style={{ marginBottom: 0 }}
-              >
-                <div className={`card-label ${cfg.textClass}`}>
+              <div key={lens} style={cfg.cardStyle}>
+                <span style={cfg.labelStyle}>
                   {cfg.label}
-                </div>
+                </span>
                 {loading ? (
                   <div className="card-body loading">
                     <span className="dot-pulse">Laden</span>
