@@ -125,7 +125,7 @@ export default function LensPage() {
     : {};
 
   return (
-    <div className="container">
+    <div className="container" style={{ background: "#F5F7F8", minHeight: "100vh" }}>
       <h1>LensLab</h1>
       <p className="subtitle">Bekijk een bericht door vier verschillende lenzen.</p>
 
@@ -158,8 +158,11 @@ export default function LensPage() {
             </span>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn disabled:bg-[#a8b8bb] disabled:cursor-not-allowed"
               disabled={loading || !message.trim()}
+              style={{ background: "#789499", color: "#fff", border: "none" }}
+              onMouseOver={e => { if (!loading && message.trim()) (e.currentTarget as HTMLButtonElement).style.background = "#5C7378"; }}
+              onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = loading || !message.trim() ? "" : "#789499"; }}
             >
               {loading ? (
                 <>
@@ -177,15 +180,7 @@ export default function LensPage() {
       {error && <div className="error">{error}</div>}
 
       {(loading || result) && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 12,
-            marginTop: 24,
-          }}
-          className="lens-grid"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
           {LENS_ORDER.map((lens) => {
             const cfg = LENS_CONFIG[lens];
             const reading = readingsByLens[lens];
@@ -233,6 +228,9 @@ export default function LensPage() {
               <button
                 className="btn"
                 onClick={() => setRcOpen(true)}
+                style={{ background: "#789499", color: "#fff", border: "none" }}
+                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = "#5C7378"; }}
+                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = "#789499"; }}
               >
                 Wil je testen welke lezing klopt?
               </button>
@@ -298,13 +296,6 @@ export default function LensPage() {
         </>
       )}
 
-      <style>{`
-        @media (max-width: 600px) {
-          .lens-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }
