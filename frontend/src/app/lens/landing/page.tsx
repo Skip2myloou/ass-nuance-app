@@ -98,8 +98,20 @@ export default function LensLandingPage() {
         }
         .ll-lens-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
 
+        /* Footer */
+        .ll-footer {
+          border-top: 1px solid rgba(0,0,0,0.07);
+          padding: 20px 32px;
+          display: flex; align-items: center; justify-content: space-between;
+          background: #fff;
+        }
+        .ll-footer-note { font-size: 13px; color: #A8A5BE; }
+        .ll-footer-link { font-size: 13px; color: #A8A5BE; text-decoration: none; }
+        .ll-footer-link:hover { color: #6B6880; }
+
         @media (max-width: 600px) {
           .ll-nav { padding: 0 20px; }
+          .ll-footer { padding: 20px; }
         }
       `}</style>
 
@@ -176,6 +188,12 @@ export default function LensLandingPage() {
             </Link>
           </div>
         </section>
+
+        {/* Footer */}
+        <footer className="ll-footer">
+          <span className="ll-footer-note">LensLab is onderdeel van NeuroNuance</span>
+          <Link href="/privacy" className="ll-footer-link">Privacybeleid</Link>
+        </footer>
 
       </div>
     </>
