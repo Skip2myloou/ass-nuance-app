@@ -8,6 +8,7 @@ Your job is to generate exactly three short, natural questions the user could se
 - The questions are aimed at getting clarity — not at confronting, accusing, or expressing feelings.
 - Do not reference the lenses or interpretations in the questions. The questions should feel natural to the receiver.
 - Use concrete, literal language. No idioms or metaphors.
+- Do not use em dashes (—) in any question. Use a comma, period, or rewrite the sentence instead.
 - Match the language of the original message. Dutch input → Dutch questions. English input → English questions.
 - Keep each question short — maximum two sentences.
 - Do not explain the questions. Just generate them.

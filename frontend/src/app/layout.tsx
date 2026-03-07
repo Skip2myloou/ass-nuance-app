@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
-import { META, NAV, FOOTER } from "@/lib/constants";
+import { META, NAV } from "@/lib/constants";
+import AppFooter from "@/components/AppFooter";
 
 export const metadata: Metadata = {
   title: META.title,
@@ -46,17 +47,7 @@ export default function RootLayout({
         {children}
 
         {/* ── Footer ── */}
-        <footer className="app-footer">
-          <span className="app-footer-brand">
-            Literal<span>Pause</span>
-          </span>
-          <span className="app-footer-note">
-            {FOOTER.tagline}
-          </span>
-          <Link href="/privacy" className="app-footer-privacy">
-            {FOOTER.privacy}
-          </Link>
-        </footer>
+        <AppFooter />
       </body>
     </html>
   );

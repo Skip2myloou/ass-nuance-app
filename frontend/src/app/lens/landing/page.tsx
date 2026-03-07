@@ -10,11 +10,11 @@ const LENS_TAGS = [
 const BLOCKS = [
   {
     label: "Waarom vier perspectieven?",
-    body: "Berichten betekenen nooit precies één ding. Wat jij bedoelt en wat de ander leest — dat zijn twee verschillende dingen. LensLab laat het verschil zien.",
+    body: "Berichten betekenen nooit precies één ding. Wat jij bedoelt en wat de ander leest zijn twee verschillende dingen. LensLab laat het verschil zien.",
   },
   {
     label: "Voor wie?",
-    body: "Voor iedereen die weleens denkt: bedoelde die persoon dat nou echt zo? Voor mensen met autisme, ADHD, sociale angst — en voor iedereen die helderheid wil in plaats van twijfel.",
+    body: "Voor iedereen die weleens denkt: bedoelde die persoon dat nou echt zo? Voor mensen met autisme, ADHD, sociale angst en voor iedereen die helderheid wil in plaats van twijfel.",
   },
   {
     label: "Wat krijg je?",
@@ -98,21 +98,8 @@ export default function LensLandingPage() {
         }
         .ll-lens-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
 
-        /* Footer */
-        .ll-footer {
-          border-top: 1px solid rgba(0,0,0,0.06);
-          padding: 28px 32px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 12px;
-          background: #fff;
-        }
-
         @media (max-width: 600px) {
-          .ll-nav   { padding: 0 20px; }
-          .ll-footer { padding: 20px; flex-direction: column; align-items: flex-start; }
+          .ll-nav { padding: 0 20px; }
         }
       `}</style>
 
@@ -130,7 +117,7 @@ export default function LensLandingPage() {
               Hetzelfde bericht.<br />Vier perspectieven.
             </h1>
             <p style={{ fontSize: 18, color: "#6B6880", lineHeight: 1.7, maxWidth: 480, marginBottom: 32 }}>
-              Zie hoe woorden landen — en waarom ze soms anders aankomen dan bedoeld.
+              Zie hoe woorden landen en waarom ze soms anders aankomen dan bedoeld.
             </p>
             <Link href="/lens" className="btn btn-indigo" style={{ fontSize: 16, padding: "15px 32px" }}>
               Analyseer een bericht →
@@ -190,15 +177,6 @@ export default function LensLandingPage() {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="ll-footer">
-          <span style={{ fontSize: 13, color: "#A8A5BE" }}>
-            LensLab is onderdeel van LiteralPause
-          </span>
-          <Link href="/privacy" style={{ fontSize: 13, color: "#A8A5BE", textDecoration: "none" }}>
-            Privacybeleid
-          </Link>
-        </footer>
       </div>
     </>
   );
