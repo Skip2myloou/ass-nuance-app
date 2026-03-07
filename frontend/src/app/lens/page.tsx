@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { analyzeLens, LensReading, LensResult } from "@/lib/api";
+import {
+  analyzeLens,
+  realityCheck,
+  LensReading,
+  LensResult,
+  RealityCheckResult,
+} from "@/lib/api";
 
 const LENS_CONFIG: Record<
   LensReading["lens"],
@@ -40,11 +46,40 @@ const LENS_ORDER: LensReading["lens"][] = [
   "Romantic lens",
 ];
 
+const STYLE_LABEL: Record<string, string> = {
+  neutraal: "Neutraal",
+  speels: "Speels",
+  direct: "Direct",
+};
+
+function ClipboardIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="9" y="2" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
 export default function LensPage() {
   const [message, setMessage] = useState("");
   const [result, setResult] = useState<LensResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [rcResult, setRcResult] = useState<RealityCheckResult | null>(null);
+  const [rcLoading, setRcLoading] = useState(false);
+  const [rcOpen, setRcOpen] = useState(false);
+  const [copied, setCopied] = useState<number | null>(null);
 
   const MAX = 500;
   const remaining = MAX - message.length;
@@ -56,10 +91,20 @@ export default function LensPage() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setRcResult(null);
+    setRcLoading(false);
+    setRcOpen(false);
 
     try {
       const data = await analyzeLens(message.trim());
       setResult(data);
+
+      // Fire reality check in background immediately after lens analysis
+      setRcLoading(true);
+      realityCheck(message.trim(), data.readings)
+        .then((rc) => setRcResult(rc))
+        .catch(() => setRcResult(null))
+        .finally(() => setRcLoading(false));
     } catch (err: unknown) {
       const msg =
         err instanceof Error ? err.message : "Er ging iets mis. Probeer opnieuw.";
@@ -67,6 +112,12 @@ export default function LensPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleCopy(question: string, index: number) {
+    await navigator.clipboard.writeText(question);
+    setCopied(index);
+    setTimeout(() => setCopied(null), 1500);
   }
 
   const readingsByLens = result
@@ -148,10 +199,7 @@ export default function LensPage() {
                   marginBottom: 0,
                 }}
               >
-                <div
-                  className="card-label"
-                  style={{ color: cfg.color }}
-                >
+                <div className="card-label" style={{ color: cfg.color }}>
                   {cfg.label}
                 </div>
                 {loading ? (
@@ -168,16 +216,86 @@ export default function LensPage() {
       )}
 
       {result && !loading && (
-        <p
-          style={{
-            textAlign: "center",
-            marginTop: 24,
-            fontSize: 14,
-            color: "var(--ink-500)",
-          }}
-        >
-          Vier lezingen. Welke herkent jij?
-        </p>
+        <>
+          <p
+            style={{
+              textAlign: "center",
+              marginTop: 24,
+              fontSize: 14,
+              color: "var(--ink-500)",
+            }}
+          >
+            Vier lezingen. Welke herkent jij?
+          </p>
+
+          {!rcOpen && (
+            <div style={{ textAlign: "center", marginTop: 16 }}>
+              <button
+                className="btn"
+                onClick={() => setRcOpen(true)}
+              >
+                Wil je testen welke lezing klopt?
+              </button>
+            </div>
+          )}
+
+          {rcOpen && (
+            <div style={{ marginTop: 24 }}>
+              {(rcLoading || rcResult) && (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
+                  {rcLoading
+                    ? [0, 1, 2].map((i) => (
+                        <div key={i} className="card" style={{ marginBottom: 0 }}>
+                          <div className="card-label">
+                            <span className="dot-pulse">Laden</span>
+                          </div>
+                          <p className="card-body" style={{ visibility: "hidden" }}>
+                            &nbsp;
+                          </p>
+                        </div>
+                      ))
+                    : rcResult?.questions.map((q, i) => (
+                        <div key={i} className="card" style={{ marginBottom: 0 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "flex-start",
+                              gap: 8,
+                            }}
+                          >
+                            <div style={{ flex: 1 }}>
+                              <div className="card-label">
+                                {STYLE_LABEL[q.style] ?? q.style}
+                              </div>
+                              <p className="card-body">{q.question}</p>
+                            </div>
+                            <button
+                              onClick={() => handleCopy(q.question, i)}
+                              title="Kopieer"
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                padding: "4px 6px",
+                                borderRadius: 4,
+                                color: copied === i ? "var(--sage)" : "var(--ink-400)",
+                                flexShrink: 0,
+                                marginTop: 2,
+                              }}
+                            >
+                              {copied === i ? "✓" : <ClipboardIcon />}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
 
       <style>{`

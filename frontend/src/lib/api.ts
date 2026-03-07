@@ -119,3 +119,19 @@ export interface LensResult {
 export function analyzeLens(message: string): Promise<LensResult> {
   return post<LensResult>("/lens/analyze", { message });
 }
+
+export interface RealityCheckQuestion {
+  style: "neutraal" | "speels" | "direct";
+  question: string;
+}
+
+export interface RealityCheckResult {
+  questions: RealityCheckQuestion[];
+}
+
+export function realityCheck(
+  original: string,
+  readings: LensReading[]
+): Promise<RealityCheckResult> {
+  return post<RealityCheckResult>("/lens/reality-check", { original, readings });
+}
