@@ -3,6 +3,8 @@ from app.schemas import (
     InterpretResponse,
     LensResult,
     MessageInput,
+    RealityCheckRequest,
+    RealityCheckResult,
     RefineRequest,
     RefineResponse,
     RepliesRequest,
@@ -11,6 +13,7 @@ from app.schemas import (
     StyleResponse,
 )
 from app.services.lenslab import analyze
+from app.services.reality_check import get_reality_check
 from app.services.claude import call_claude
 from app.services.prompt_builder import (
     build_interpret_prompt,
@@ -120,3 +123,19 @@ async def generate_style(request: Request, req: StyleRequest):
 async def analyze_message(request: Request, body: MessageInput) -> LensResult:
     """Show a message through four cognitive lenses."""
     return await analyze(body.message)
+
+
+@app.post("/lens/reality-check", response_model=RealityCheckResult)
+@limiter.limit("20/minute")
+async def reality_check(
+    request: Request, body: RealityCheckRequest
+) -> RealityCheckResult:
+    """Generate three reality check questions based on lens readings."""
+    readings_by_lens = {r.lens: r.reading for r in body.readings}
+    return await get_reality_check(
+        original=body.original,
+        literal=readings_by_lens.get("Literal lens", ""),
+        threat=readings_by_lens.get("Threat lens", ""),
+        social=readings_by_lens.get("Social reading lens", ""),
+        romantic=readings_by_lens.get("Romantic lens", ""),
+    )

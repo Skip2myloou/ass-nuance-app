@@ -152,3 +152,20 @@ class LensReading(BaseModel):
 
 class LensResult(BaseModel):
     readings: list[LensReading]
+
+
+# ── /lens/reality-check ─────────────────────────────────────────
+
+
+class RealityCheckQuestion(BaseModel):
+    style: Literal["neutraal", "speels", "direct"]
+    question: str
+
+
+class RealityCheckResult(BaseModel):
+    questions: list[RealityCheckQuestion]
+
+
+class RealityCheckRequest(BaseModel):
+    original: str
+    readings: list[LensReading]
