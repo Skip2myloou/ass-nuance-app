@@ -11,32 +11,12 @@ import {
 
 const LENS_CONFIG: Record<
   LensReading["lens"],
-  { label: string; color: string; bg: string; border: string }
+  { label: string; bgClass: string; borderClass: string; textClass: string }
 > = {
-  "Literal lens": {
-    label: "Letterlijk",
-    color: "#1d4ed8",
-    bg: "rgba(59,130,246,0.06)",
-    border: "rgba(59,130,246,0.30)",
-  },
-  "Threat lens": {
-    label: "Dreiging",
-    color: "#b91c1c",
-    bg: "rgba(239,68,68,0.06)",
-    border: "rgba(239,68,68,0.30)",
-  },
-  "Social reading lens": {
-    label: "Sociaal",
-    color: "#15803d",
-    bg: "rgba(34,197,94,0.06)",
-    border: "rgba(34,197,94,0.30)",
-  },
-  "Romantic lens": {
-    label: "Romantisch",
-    color: "#7e22ce",
-    bg: "rgba(168,85,247,0.06)",
-    border: "rgba(168,85,247,0.30)",
-  },
+  "Literal lens":       { label: "Letterlijk", bgClass: "bg-blue-50",   borderClass: "border-blue-200",   textClass: "text-blue-600" },
+  "Threat lens":        { label: "Dreiging",   bgClass: "bg-red-50",    borderClass: "border-red-200",    textClass: "text-red-600" },
+  "Social reading lens":{ label: "Sociaal",    bgClass: "bg-green-50",  borderClass: "border-green-200",  textClass: "text-green-600" },
+  "Romantic lens":      { label: "Romantisch", bgClass: "bg-purple-50", borderClass: "border-purple-200", textClass: "text-purple-600" },
 };
 
 const LENS_ORDER: LensReading["lens"][] = [
@@ -187,14 +167,10 @@ export default function LensPage() {
             return (
               <div
                 key={lens}
-                className="card"
-                style={{
-                  background: cfg.bg,
-                  borderColor: cfg.border,
-                  marginBottom: 0,
-                }}
+                className={`card ${cfg.bgClass} ${cfg.borderClass}`}
+                style={{ marginBottom: 0 }}
               >
-                <div className="card-label" style={{ color: cfg.color }}>
+                <div className={`card-label ${cfg.textClass}`}>
                   {cfg.label}
                 </div>
                 {loading ? (

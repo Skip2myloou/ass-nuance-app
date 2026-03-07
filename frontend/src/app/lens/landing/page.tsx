@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const LENS_TAGS = [
-  { label: "Letterlijk" },
-  { label: "Dreiging" },
-  { label: "Sociaal" },
-  { label: "Romantisch" },
+  { label: "Letterlijk", bg: "rgba(59,130,246,0.10)",  color: "#1d4ed8" },
+  { label: "Dreiging",   bg: "rgba(239,68,68,0.10)",   color: "#b91c1c" },
+  { label: "Sociaal",    bg: "rgba(34,197,94,0.10)",   color: "#15803d" },
+  { label: "Romantisch", bg: "rgba(168,85,247,0.10)",  color: "#7e22ce" },
 ];
 
 const BLOCKS = [
@@ -166,10 +166,10 @@ export default function LensLandingPage() {
                 &ldquo;haha ja hoor, misschien&rdquo;
               </p>
               <div className="ll-lens-tags">
-                {LENS_TAGS.map(({ label }) => (
+                {LENS_TAGS.map(({ label, bg, color }) => (
                   <span
                     key={label}
-                    style={{ fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 999, background: "#FFD2C2", color: "#1A2226" }}
+                    style={{ fontSize: 12, fontWeight: 600, padding: "5px 12px", borderRadius: 999, background: bg, color }}
                   >
                     {label}
                   </span>
