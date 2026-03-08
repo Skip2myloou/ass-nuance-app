@@ -192,7 +192,7 @@ export default function LensLandingPage() {
 
         {/* Footer */}
         <footer className="ll-footer">
-          <span className="ll-footer-note">LensLab is onderdeel van NeuroNuance</span>
+          <span className="ll-footer-note">LensLab is onderdeel van LiteralPause</span>
           <Link href="/privacy" className="ll-footer-link">Privacybeleid</Link>
         </footer>
 
