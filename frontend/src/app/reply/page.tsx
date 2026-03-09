@@ -1,5 +1,7 @@
 "use client";
 
+import { trackEvent } from "@/lib/plausible";
+
 import Card from "../../components/Card";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -151,11 +153,23 @@ function ReplyPageInner() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    fetchReplies();
+    if (!text.trim()) return;
+
+    trackEvent("lp_generate_reply");
+
+    setLoading(true);
+    setError("");
+
+    const data = await fetchReplies({
+      text,
+      goal,
+    });
+    setResult(data);
   }
 
   function handleCopy(message: string, index: number) {
     navigator.clipboard.writeText(message);
+    trackEvent("lp_copy_reply");
     setCopied(index);
     setTimeout(() => setCopied(null), 2000);
   }

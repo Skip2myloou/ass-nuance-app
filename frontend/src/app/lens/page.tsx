@@ -1,4 +1,5 @@
 "use client";
+import { trackEvent } from "@/lib/plausible";
 
 import { CSSProperties, useState } from "react";
 import {
@@ -68,6 +69,8 @@ export default function LensPage() {
     e.preventDefault();
     if (!message.trim()) return;
 
+    trackEvent("lens_analyze");
+
     setLoading(true);
     setError(null);
     setResult(null);
@@ -78,6 +81,8 @@ export default function LensPage() {
     try {
       const data = await analyzeLens(message.trim());
       setResult(data);
+
+      trackEvent("lens_analysis_completed");
 
       // Fire reality check in background immediately after lens analysis
       setRcLoading(true);
@@ -96,6 +101,7 @@ export default function LensPage() {
 
   async function handleCopy(question: string, index: number) {
     await navigator.clipboard.writeText(question);
+    trackEvent("lens_copy_question");
     setCopied(index);
     setTimeout(() => setCopied(null), 1500);
   }
@@ -199,7 +205,10 @@ export default function LensPage() {
             <div style={{ textAlign: "center", marginTop: 16 }}>
               <button
                 className="btn"
-                onClick={() => setRcOpen(true)}
+                onClick={() => {
+                  trackEvent("lens_reality_check");
+                  setRcOpen(true);
+                }}
                 style={{ background: "#789499", color: "#fff", border: "none" }}
                 onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = "#5C7378"; }}
                 onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = "#789499"; }}
