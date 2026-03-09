@@ -33,7 +33,7 @@ export const NAV = {
 
 export const FOOTER = {
   brand: "LiteralPause",
-  tagline: "Van bewustwording naar bewuste keuze.",
+  tagline: "LensLab is onderdeel van LiteralPause.",
   privacy: "Privacybeleid",
 } as const;
 
