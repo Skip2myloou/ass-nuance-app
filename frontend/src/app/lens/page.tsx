@@ -1,6 +1,6 @@
 "use client";
 import { trackEvent } from "@/lib/plausible";
-
+import Link from "next/link";
 import { CSSProperties, useState } from "react";
 import {
   analyzeLens,
@@ -12,10 +12,11 @@ import {
 
 // ── LensLab colour tokens ──────────────────────────────────
 const LL = {
-  ocean:      "#2872A1",
-  oceanDark:  "#1A5480",
-  cloud:      "#CBDDE9",
-  cloudLight: "#EBF3F8",
+  ocean:      "#2872A1",  // accent — buttons, labels, headings
+  oceanDark:  "#1A5480",  // hover state
+  cloud:      "#CBDDE9",  // subtle bg, disabled state
+  cloudLight: "#EBF3F8",  // hover bg on ghost elements
+  bg:         "#F5F7F8",
   ink:        "#1A2226",
   inkMid:     "#4A5C62",
   muted:      "#A8A5BE",
@@ -70,30 +71,24 @@ export default function LensPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!message.trim()) return;
-
     trackEvent("lens_analyze");
-
     setLoading(true);
     setError(null);
     setResult(null);
     setRcResult(null);
     setRcLoading(false);
     setRcOpen(false);
-
     try {
       const data = await analyzeLens(message.trim());
       setResult(data);
-
       trackEvent("lens_analysis_completed");
-
       setRcLoading(true);
       realityCheck(message.trim(), data.readings)
         .then((rc) => setRcResult(rc))
         .catch(() => setRcResult(null))
         .finally(() => setRcLoading(false));
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : "Er ging iets mis. Probeer opnieuw.";
+      const msg = err instanceof Error ? err.message : "Er ging iets mis. Probeer opnieuw.";
       setError(msg);
     } finally {
       setLoading(false);
@@ -112,137 +107,178 @@ export default function LensPage() {
     : {};
 
   return (
-    <div className="container" style={{ background: "#F5F7F8", minHeight: "100vh" }}>
-      {/* ── LensLab heading in Ocean Blue ── */}
-      <h1 style={{ color: LL.ocean }}>LensLab</h1>
-      <p className="subtitle">Bekijk een bericht door vier verschillende lenzen.</p>
+    <>
+      <style>{`
+        .ll-nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+          height: 60px; padding: 0 32px;
+          display: flex; align-items: center; justify-content: space-between;
+          background: rgba(245,247,248,0.92);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .ll-wordmark {
+          font-size: 15px; font-weight: 800; color: ${LL.ink};
+          letter-spacing: -0.5px; font-family: system-ui,-apple-system,sans-serif;
+          text-decoration: none;
+        }
+        .ll-wordmark-accent { color: ${LL.ocean}; }
+        .ll-back {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 13px; font-weight: 500;
+          color: ${LL.muted};
+          text-decoration: none;
+          padding: 7px 14px;
+          border-radius: 10px;
+          border: 1.5px solid ${LL.cloud};
+          background: transparent;
+          transition: color 200ms, border-color 200ms, background 200ms;
+        }
+        .ll-back:hover {
+          color: ${LL.ocean};
+          border-color: ${LL.ocean};
+          background: ${LL.cloudLight};
+        }
+        @media (max-width: 600px) {
+          .ll-nav { padding: 0 20px; }
+        }
+      `}</style>
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          {/* ── Label in Ocean Blue ── */}
-          <label htmlFor="message" style={{ color: LL.ocean }}>Bericht</label>
-          <textarea
-            id="message"
-            className="textarea"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            maxLength={MAX}
-            rows={4}
-            placeholder="Plak hier het bericht dat je wilt analyseren…"
-            disabled={loading}
-          />
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-            <span className="helper-text" style={{ color: remaining < 50 ? "var(--red)" : undefined }}>
-              {remaining} tekens over
-            </span>
-            {/* ── Primary button in Ocean Blue ── */}
-            <button
-              type="submit"
-              className="btn"
-              disabled={loading || !message.trim()}
-              style={{
-                background: loading || !message.trim() ? LL.cloud : LL.ocean,
-                color: loading || !message.trim() ? LL.inkMid : "#fff",
-                border: "none",
-                cursor: loading || !message.trim() ? "not-allowed" : "pointer",
-                transition: "background 200ms, transform 200ms, box-shadow 200ms",
-              }}
-              onMouseOver={e => { if (!loading && message.trim()) { (e.currentTarget as HTMLButtonElement).style.background = LL.oceanDark; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}}
-              onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = loading || !message.trim() ? LL.cloud : LL.ocean; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
-            >
-              {loading ? (
-                <><span className="spinner" />Analyseren…</>
-              ) : (
-                "Analyseer"
-              )}
-            </button>
-          </div>
-        </div>
-      </form>
+      {/* ── LensLab navbar ── */}
+      <nav className="ll-nav">
+        <Link href="/lens/landing" className="ll-wordmark">
+          <span className="ll-wordmark-accent">Lens</span>Lab
+        </Link>
+        <Link href="/" className="ll-back">
+          ← LiteralPause
+        </Link>
+      </nav>
 
-      {error && <div className="error">{error}</div>}
+      <div className="container" style={{ background: LL.bg, minHeight: "100vh" }}>
+        <h1 style={{ color: LL.ocean }}>LensLab</h1>
+        <p className="subtitle">Bekijk een bericht door vier verschillende lenzen.</p>
 
-      {(loading || result) && (
-        <div className="lens-grid">
-          {LENS_ORDER.map((lens) => {
-            const cfg = LENS_CONFIG[lens];
-            const reading = readingsByLens[lens];
-            return (
-              <div key={lens} style={cfg.cardStyle}>
-                <span style={cfg.labelStyle}>{cfg.label}</span>
-                {loading ? (
-                  <div className="card-body loading"><span className="dot-pulse">Laden</span></div>
-                ) : (
-                  <p className="card-body">{reading ?? "—"}</p>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {result && !loading && (
-        <>
-          <p style={{ textAlign: "center", marginTop: 24, fontSize: 14, color: "var(--ink-500)" }}>
-            Vier lezingen. Welke herkent jij?
-          </p>
-
-          {!rcOpen && (
-            <div style={{ textAlign: "center", marginTop: 16 }}>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="message" style={{ color: LL.ocean }}>Bericht</label>
+            <textarea
+              id="message"
+              className="textarea"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              maxLength={MAX}
+              rows={4}
+              placeholder="Plak hier het bericht dat je wilt analyseren…"
+              disabled={loading}
+            />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+              <span className="helper-text" style={{ color: remaining < 50 ? "var(--red)" : undefined }}>
+                {remaining} tekens over
+              </span>
               <button
+                type="submit"
                 className="btn"
-                onClick={() => { trackEvent("lens_reality_check"); setRcOpen(true); }}
-                style={{ background: LL.ocean, color: "#fff", border: "none" }}
-                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = LL.oceanDark; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}
-                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = LL.ocean; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
+                disabled={loading || !message.trim()}
+                style={{
+                  background: loading || !message.trim() ? LL.cloud : LL.ocean,
+                  color: loading || !message.trim() ? LL.inkMid : "#fff",
+                  border: "none",
+                  cursor: loading || !message.trim() ? "not-allowed" : "pointer",
+                  transition: "background 200ms, transform 200ms",
+                }}
+                onMouseOver={e => { if (!loading && message.trim()) { (e.currentTarget as HTMLButtonElement).style.background = LL.oceanDark; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}}
+                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = loading || !message.trim() ? LL.cloud : LL.ocean; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
               >
-                Wil je testen welke lezing klopt?
+                {loading ? <><span className="spinner" />Analyseren…</> : "Analyseer"}
               </button>
             </div>
-          )}
+          </div>
+        </form>
 
-          {rcOpen && (
-            <div style={{ marginTop: 24 }}>
-              {(rcLoading || rcResult) && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {rcLoading
-                    ? [0, 1, 2].map((i) => (
-                        <div key={i} className="card" style={{ marginBottom: 0 }}>
-                          <div className="card-label"><span className="dot-pulse">Laden</span></div>
-                          <p className="card-body" style={{ visibility: "hidden" }}>&nbsp;</p>
-                        </div>
-                      ))
-                    : rcResult?.questions.map((q, i) => (
-                        <div key={i} className="card" style={{ marginBottom: 0 }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
-                            <div style={{ flex: 1 }}>
-                              {/* ── card-label in Ocean Blue ── */}
-                              <div className="card-label" style={{ color: LL.ocean }}>
-                                {STYLE_LABEL[q.style] ?? q.style}
-                              </div>
-                              <p className="card-body">{q.question}</p>
-                            </div>
-                            <button
-                              onClick={() => handleCopy(q.question, i)}
-                              title="Kopieer"
-                              style={{
-                                background: "none", border: "none", cursor: "pointer",
-                                padding: "4px 6px", borderRadius: 4,
-                                color: copied === i ? LL.ocean : "var(--ink-400)",
-                                flexShrink: 0, marginTop: 2,
-                              }}
-                            >
-                              {copied === i ? "✓" : <ClipboardIcon />}
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+        {error && <div className="error">{error}</div>}
+
+        {(loading || result) && (
+          <div className="lens-grid">
+            {LENS_ORDER.map((lens) => {
+              const cfg = LENS_CONFIG[lens];
+              const reading = readingsByLens[lens];
+              return (
+                <div key={lens} style={cfg.cardStyle}>
+                  <span style={cfg.labelStyle}>{cfg.label}</span>
+                  {loading ? (
+                    <div className="card-body loading"><span className="dot-pulse">Laden</span></div>
+                  ) : (
+                    <p className="card-body">{reading ?? "—"}</p>
+                  )}
                 </div>
-              )}
-            </div>
-          )}
-        </>
-      )}
-    </div>
+              );
+            })}
+          </div>
+        )}
+
+        {result && !loading && (
+          <>
+            <p style={{ textAlign: "center", marginTop: 24, fontSize: 14, color: "var(--ink-500)" }}>
+              Vier lezingen. Welke herkent jij?
+            </p>
+
+            {!rcOpen && (
+              <div style={{ textAlign: "center", marginTop: 16 }}>
+                <button
+                  className="btn"
+                  onClick={() => { trackEvent("lens_reality_check"); setRcOpen(true); }}
+                  style={{ background: LL.ocean, color: "#fff", border: "none", transition: "background 200ms, transform 200ms" }}
+                  onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = LL.oceanDark; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}
+                  onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = LL.ocean; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
+                >
+                  Wil je testen welke lezing klopt?
+                </button>
+              </div>
+            )}
+
+            {rcOpen && (
+              <div style={{ marginTop: 24 }}>
+                {(rcLoading || rcResult) && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {rcLoading
+                      ? [0, 1, 2].map((i) => (
+                          <div key={i} className="card" style={{ marginBottom: 0 }}>
+                            <div className="card-label"><span className="dot-pulse">Laden</span></div>
+                            <p className="card-body" style={{ visibility: "hidden" }}>&nbsp;</p>
+                          </div>
+                        ))
+                      : rcResult?.questions.map((q, i) => (
+                          <div key={i} className="card" style={{ marginBottom: 0 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                              <div style={{ flex: 1 }}>
+                                <div className="card-label" style={{ color: LL.ocean }}>
+                                  {STYLE_LABEL[q.style] ?? q.style}
+                                </div>
+                                <p className="card-body">{q.question}</p>
+                              </div>
+                              <button
+                                onClick={() => handleCopy(q.question, i)}
+                                title="Kopieer"
+                                style={{
+                                  background: "none", border: "none", cursor: "pointer",
+                                  padding: "4px 6px", borderRadius: 4,
+                                  color: copied === i ? LL.ocean : "var(--ink-400)",
+                                  flexShrink: 0, marginTop: 2,
+                                }}
+                              >
+                                {copied === i ? "✓" : <ClipboardIcon />}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }
