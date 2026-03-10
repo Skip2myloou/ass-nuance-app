@@ -1287,7 +1287,30 @@ input[type="radio"] {
   .lp-actions { flex-direction: column; }
   .lp-actions .btn { width: 100%; }
 }
+.lp-incoming-message {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
 
+.lp-incoming-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #A8A5BE;
+  margin-bottom: 6px;
+}
+
+.lp-incoming-text {
+  font-size: 13px;
+  color: #1A2226;
+  line-height: 1.5;
+  margin: 0;
+}
 /* =============================== */
 /* LENS GRID (LensLab tool page)   */
 /* =============================== */

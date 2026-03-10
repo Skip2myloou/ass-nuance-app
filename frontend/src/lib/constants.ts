@@ -27,7 +27,7 @@ export const META = {
 
 export const NAV = {
   brand: "LiteralPause",
-  checkin: "Check-in",
+  checkin: "Hoe voel ik me?",
   start: "Start →",
 } as const;
 
@@ -87,7 +87,7 @@ export const HOME = {
 
 export const CHECKIN = {
   eyebrow: "Stap 01 · Check-in",
-  heading: "Waar zit je systeem nu?",
+  heading: "Hoe voel ik me nu?",
   headingEm: "systeem",
   subtitle: "Schuif de slider naar waar je je nu bevindt.",
   saveBusy: "Opgeslagen! →",
@@ -120,7 +120,7 @@ export const INTERPRET = {
   subtitle: "Laten we samen kijken wat hier bedoeld wordt.",
 
   // Check-in blok
-  checkinHeading: "Even kort checken",
+  checkinHeading: "Even kort checken hoe ik me voel",
   checkinSubtitle: "Hoe zit je er nu bij terwijl je het ontvangen bericht leest?",
   states: {
     calm: { label: "Helder & rustig", icon: "🟢" },
