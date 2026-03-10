@@ -8,18 +8,18 @@ export default function Home() {
             <div className="lp-hero-text">
               <div className="lp-eyebrow">
                 <span className="lp-eyebrow-dot" />
-                Helder denken in complexe gesprekken
+                Voor als een bericht je blijft bezighouden
               </div>
               <h1 className="lp-display">
-                Van bewustwording<br />naar <em>bewuste keuze.</em>
+                Begrijp je niet altijd<br />wat de ander <em>bedoelt?</em>
               </h1>
               <p className="lp-subtitle">
-                Een helder driestappenmodel dat de lagen in communicatie zichtbaar maakt,
-                zodat je rustiger en bewuster kunt reageren.
+                LiteralPause helpt je zien wat er staat, wat het kan betekenen,
+                en hoe je kunt reageren. Stap voor stap.
               </p>
               <div className="lp-actions">
-                <Link href="/reply" className="btn btn-primary btn-big">Ervaar het model →</Link>
-                <Link href="#hoe-het-werkt" className="btn btn-ghost btn-big">Hoe het werkt</Link>
+                <Link href="/reply" className="btn btn-primary btn-big">Probeer het uit →</Link>
+                <Link href="#hoe-het-werkt" className="btn btn-ghost btn-big">Wat is het precies?</Link>
               </div>
               <div className="lp-trust">
                 <div className="lp-trust-dots">
@@ -113,7 +113,7 @@ export default function Home() {
                   <button className="lp-cta-soft">Analyseer →</button>
                 </div>
               </div>
-              <p className="lp-mock-caption">Plak het bericht. Geen check-in nodig.</p>
+              <p className="lp-mock-caption">Plak het bericht. Geen account nodig.</p>
             </div>
             <div className="lp-mockup-col">
               <div className="lp-phone">
@@ -161,10 +161,10 @@ export default function Home() {
         <div className="lp-container-narrow" style={{ textAlign: "center" }}>
           <div className="t-label" style={{ color: "rgba(210,190,140,0.8)", marginBottom: 16 }}>Klaar om te beginnen?</div>
           <h2 className="lp-display" style={{ color: "#fff" }}>
-            Ontdek hoe LiteralPause<br />je helpt <em style={{ color: "rgba(210,190,140,0.9)" }}>bewuster te reageren.</em>
+            Klaar om te kijken<br />wat er <em style={{ color: "rgba(210,190,140,0.9)" }}>écht staat?</em>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.5)", marginTop: 16, fontSize: 15 }}>Geen account nodig. Gewoon starten.</p>
-          <Link href="/reply" className="lp-btn-inverse">Ervaar LiteralPause →</Link>
+          <Link href="/reply" className="lp-btn-inverse">Probeer LiteralPause →</Link>
         </div>
       </section>
     </>
