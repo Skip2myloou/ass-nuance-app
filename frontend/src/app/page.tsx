@@ -33,6 +33,10 @@ export default function Home() {
             <div className="lp-mockup-wrap">
               <div className="lp-phone">
                 <div className="lp-screen lp-screen-framework">
+                  <div className="lp-incoming-message">
+                    <span className="lp-incoming-label">bericht</span>
+                    <p className="lp-incoming-text">&ldquo;Hey, het gaat me niet lukken vanavond, &hellip;&rdquo;</p>
+                  </div>
                   <div className="lp-framework-icon">💬</div>
                   <p className="lp-framework-title">LiteralPause</p>
                   <div className="lp-framework-steps">
