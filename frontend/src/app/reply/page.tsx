@@ -168,6 +168,7 @@ function ReplyPageInner() {
 
     await fetchReplies();
   }
+}
 
   function handleCopy(message: string, index: number) {
     navigator.clipboard.writeText(message);
