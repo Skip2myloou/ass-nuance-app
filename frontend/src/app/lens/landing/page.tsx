@@ -1,5 +1,18 @@
 import Link from "next/link";
 
+// ── LensLab colour tokens ──────────────────────────────────
+const LL = {
+  ocean:      "#2872A1",
+  oceanDark:  "#1A5480",
+  cloud:      "#CBDDE9",
+  cloudLight: "#EBF3F8",
+  bg:         "#F5F7F8",
+  bgGray:     "#eef1f2",
+  ink:        "#1A2226",
+  inkMid:     "#4A5C62",
+  muted:      "#A8A5BE",
+};
+
 const LENS_TAGS = [
   { label: "Letterlijk", bg: "rgba(59,130,246,0.10)",  color: "#1d4ed8" },
   { label: "Dreiging",   bg: "rgba(239,68,68,0.10)",   color: "#b91c1c" },
@@ -26,7 +39,7 @@ export default function LensLandingPage() {
   return (
     <>
       <style>{`
-        .ll-wrap { background: #F5F7F8; min-height: 100vh; }
+        .ll-wrap { background: ${LL.bg}; min-height: 100vh; }
 
         /* Nav */
         .ll-nav {
@@ -38,40 +51,43 @@ export default function LensLandingPage() {
           -webkit-backdrop-filter: blur(12px);
           border-bottom: 1px solid rgba(0,0,0,0.06);
         }
+        /* ── Wordmark: Lens in Ocean Blue, Lab in ink ── */
         .ll-wordmark {
-          font-size: 16px; font-weight: 800; color: #1A2226;
+          font-size: 16px; font-weight: 800; color: ${LL.ink};
           letter-spacing: -0.5px; font-family: system-ui,-apple-system,sans-serif;
         }
+        .ll-wordmark-accent { color: ${LL.ocean}; }
 
-        /* Aqua button */
+        /* Ocean Blue button */
         .btn-aqua {
-          background: #789499;
+          background: ${LL.ocean};
           color: #fff;
-          box-shadow: 0 4px 12px rgba(120,148,153,0.25);
+          box-shadow: 0 4px 12px rgba(40,114,161,0.25);
           border-radius: 12px;
+          transition: background 200ms, transform 200ms, box-shadow 200ms;
         }
         .btn-aqua:hover {
-          background: #5C7378;
+          background: ${LL.oceanDark};
           transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(92,115,120,0.35);
+          box-shadow: 0 6px 20px rgba(26,84,128,0.35);
         }
 
         /* Sections */
         .ll-hero {
           min-height: 100svh; display: flex; align-items: center;
-          padding: 100px 0 80px; background: #F5F7F8;
+          padding: 100px 0 80px; background: ${LL.bg};
         }
-        .ll-section { padding: 72px 0; background: #F5F7F8; }
-        .ll-section-gray { background: #eef1f2; }
+        .ll-section { padding: 72px 0; background: ${LL.bg}; }
+        .ll-section-gray { background: ${LL.bgGray}; }
 
-        /* Headings (override globals serif) */
+        /* ── Headings in Ocean Blue ── */
         .ll-h1 {
           font-family: system-ui,-apple-system,sans-serif;
           font-weight: 800;
           font-size: clamp(32px,5vw,56px);
           line-height: 1.08;
           letter-spacing: -1.5px;
-          color: #1A2226;
+          color: ${LL.ocean};
           margin-bottom: 20px;
         }
         .ll-h2 {
@@ -79,7 +95,7 @@ export default function LensLandingPage() {
           font-weight: 800;
           font-size: clamp(24px,3vw,36px);
           letter-spacing: -0.5px;
-          color: #1A2226;
+          color: ${LL.ocean};
           margin: 0 0 28px;
         }
 
@@ -89,11 +105,17 @@ export default function LensLandingPage() {
           border-bottom: 1px solid rgba(0,0,0,0.06);
         }
         .ll-block:last-child { border-bottom: none; }
+        /* ── Block labels in Ocean Blue ── */
+        .ll-block-label {
+          font-weight: 700; font-size: 15px;
+          color: ${LL.ocean};
+          margin-bottom: 8px;
+        }
 
         /* Example box */
         .ll-example-box {
           background: #FFFFFF;
-          border: 1px solid #C8E6EA;
+          border: 1px solid ${LL.cloud};
           border-radius: 16px;
           padding: 28px;
         }
@@ -101,13 +123,13 @@ export default function LensLandingPage() {
 
         /* Footer */
         .ll-footer {
-          border-top: 1px solid #C8E6EA;
+          border-top: 1px solid ${LL.cloud};
           padding: 20px 32px;
           display: flex; align-items: center; justify-content: space-between;
-          background: #F5F7F8;
+          background: ${LL.bg};
         }
-        .ll-footer-note { font-size: 13px; color: #A8A5BE; }
-        .ll-footer-link { font-size: 13px; color: #A8A5BE; text-decoration: none; }
+        .ll-footer-note { font-size: 13px; color: ${LL.muted}; }
+        .ll-footer-link { font-size: 13px; color: ${LL.muted}; text-decoration: none; }
         .ll-footer-link:hover { color: #6B6880; }
 
         @media (max-width: 600px) {
@@ -119,7 +141,10 @@ export default function LensLandingPage() {
       <div className="ll-wrap">
         {/* Nav */}
         <nav className="ll-nav">
-          <span className="ll-wordmark">LensLab</span>
+          {/* ── Wordmark: Lens in Ocean Blue ── */}
+          <span className="ll-wordmark">
+            <span className="ll-wordmark-accent">Lens</span>Lab
+          </span>
           <Link href="/lens" className="btn btn-aqua btn-sm">Probeer nu →</Link>
         </nav>
 
@@ -129,13 +154,13 @@ export default function LensLandingPage() {
             <h1 className="ll-h1">
               Hetzelfde bericht.<br />Vier perspectieven.
             </h1>
-            <p style={{ fontSize: 18, color: "#4A5C62", lineHeight: 1.7, maxWidth: 480, marginBottom: 32 }}>
+            <p style={{ fontSize: 18, color: LL.inkMid, lineHeight: 1.7, maxWidth: 480, marginBottom: 32 }}>
               Zie hoe woorden landen en waarom ze soms anders aankomen dan bedoeld.
             </p>
             <Link href="/lens" className="btn btn-aqua" style={{ fontSize: 16, padding: "15px 32px" }}>
               Analyseer een bericht →
             </Link>
-            <p style={{ marginTop: 14, fontSize: 13, color: "#A8A5BE" }}>
+            <p style={{ marginTop: 14, fontSize: 13, color: LL.muted }}>
               Geen account. Geen opslag. Gewoon inzicht.
             </p>
           </div>
@@ -146,10 +171,8 @@ export default function LensLandingPage() {
           <div className="lp-container-narrow">
             {BLOCKS.map(({ label, body }) => (
               <div key={label} className="ll-block">
-                <p style={{ fontWeight: 700, fontSize: 15, color: "#1A2226", marginBottom: 8 }}>
-                  {label}
-                </p>
-                <p style={{ fontSize: 15, color: "#4A5C62", lineHeight: 1.75 }}>{body}</p>
+                <p className="ll-block-label">{label}</p>
+                <p style={{ fontSize: 15, color: LL.inkMid, lineHeight: 1.75 }}>{body}</p>
               </div>
             ))}
           </div>
@@ -159,10 +182,10 @@ export default function LensLandingPage() {
         <section className="ll-section ll-section-gray">
           <div className="lp-container-narrow">
             <div className="ll-example-box">
-              <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "1.2px", textTransform: "uppercase", color: "#A8A5BE", marginBottom: 12 }}>
+              <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "1.2px", textTransform: "uppercase", color: LL.muted, marginBottom: 12 }}>
                 Voorbeeld
               </p>
-              <p style={{ fontSize: 18, fontWeight: 600, color: "#1A2226" }}>
+              <p style={{ fontSize: 18, fontWeight: 600, color: LL.ink }}>
                 &ldquo;haha ja hoor, misschien&rdquo;
               </p>
               <div className="ll-lens-tags">
@@ -175,7 +198,7 @@ export default function LensLandingPage() {
                   </span>
                 ))}
               </div>
-              <p style={{ fontSize: 14, color: "#A8A5BE" }}>Elke lens leest dit bericht anders.</p>
+              <p style={{ fontSize: 14, color: LL.muted }}>Elke lens leest dit bericht anders.</p>
             </div>
           </div>
         </section>

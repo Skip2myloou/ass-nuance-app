@@ -10,6 +10,17 @@ import {
   RealityCheckResult,
 } from "@/lib/api";
 
+// ── LensLab colour tokens ──────────────────────────────────
+const LL = {
+  ocean:      "#2872A1",
+  oceanDark:  "#1A5480",
+  cloud:      "#CBDDE9",
+  cloudLight: "#EBF3F8",
+  ink:        "#1A2226",
+  inkMid:     "#4A5C62",
+  muted:      "#A8A5BE",
+};
+
 const LENS_CONFIG: Record<
   LensReading["lens"],
   { label: string; cardStyle: CSSProperties; labelStyle: CSSProperties }
@@ -35,16 +46,7 @@ const STYLE_LABEL: Record<string, string> = {
 
 function ClipboardIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="9" y="2" width="13" height="13" rx="2" ry="2" />
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
     </svg>
@@ -84,7 +86,6 @@ export default function LensPage() {
 
       trackEvent("lens_analysis_completed");
 
-      // Fire reality check in background immediately after lens analysis
       setRcLoading(true);
       realityCheck(message.trim(), data.readings)
         .then((rc) => setRcResult(rc))
@@ -112,12 +113,14 @@ export default function LensPage() {
 
   return (
     <div className="container" style={{ background: "#F5F7F8", minHeight: "100vh" }}>
-      <h1>LensLab</h1>
+      {/* ── LensLab heading in Ocean Blue ── */}
+      <h1 style={{ color: LL.ocean }}>LensLab</h1>
       <p className="subtitle">Bekijk een bericht door vier verschillende lenzen.</p>
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="message">Bericht</label>
+          {/* ── Label in Ocean Blue ── */}
+          <label htmlFor="message" style={{ color: LL.ocean }}>Bericht</label>
           <textarea
             id="message"
             className="textarea"
@@ -128,33 +131,27 @@ export default function LensPage() {
             placeholder="Plak hier het bericht dat je wilt analyseren…"
             disabled={loading}
           />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 8,
-            }}
-          >
-            <span
-              className="helper-text"
-              style={{ color: remaining < 50 ? "var(--red)" : undefined }}
-            >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+            <span className="helper-text" style={{ color: remaining < 50 ? "var(--red)" : undefined }}>
               {remaining} tekens over
             </span>
+            {/* ── Primary button in Ocean Blue ── */}
             <button
               type="submit"
-              className="btn disabled:bg-[#a8b8bb] disabled:cursor-not-allowed"
+              className="btn"
               disabled={loading || !message.trim()}
-              style={{ background: "#789499", color: "#fff", border: "none" }}
-              onMouseOver={e => { if (!loading && message.trim()) (e.currentTarget as HTMLButtonElement).style.background = "#5C7378"; }}
-              onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = loading || !message.trim() ? "" : "#789499"; }}
+              style={{
+                background: loading || !message.trim() ? LL.cloud : LL.ocean,
+                color: loading || !message.trim() ? LL.inkMid : "#fff",
+                border: "none",
+                cursor: loading || !message.trim() ? "not-allowed" : "pointer",
+                transition: "background 200ms, transform 200ms, box-shadow 200ms",
+              }}
+              onMouseOver={e => { if (!loading && message.trim()) { (e.currentTarget as HTMLButtonElement).style.background = LL.oceanDark; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}}
+              onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = loading || !message.trim() ? LL.cloud : LL.ocean; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
             >
               {loading ? (
-                <>
-                  <span className="spinner" />
-                  Analyseren…
-                </>
+                <><span className="spinner" />Analyseren…</>
               ) : (
                 "Analyseer"
               )}
@@ -172,13 +169,9 @@ export default function LensPage() {
             const reading = readingsByLens[lens];
             return (
               <div key={lens} style={cfg.cardStyle}>
-                <span style={cfg.labelStyle}>
-                  {cfg.label}
-                </span>
+                <span style={cfg.labelStyle}>{cfg.label}</span>
                 {loading ? (
-                  <div className="card-body loading">
-                    <span className="dot-pulse">Laden</span>
-                  </div>
+                  <div className="card-body loading"><span className="dot-pulse">Laden</span></div>
                 ) : (
                   <p className="card-body">{reading ?? "—"}</p>
                 )}
@@ -190,14 +183,7 @@ export default function LensPage() {
 
       {result && !loading && (
         <>
-          <p
-            style={{
-              textAlign: "center",
-              marginTop: 24,
-              fontSize: 14,
-              color: "var(--ink-500)",
-            }}
-          >
+          <p style={{ textAlign: "center", marginTop: 24, fontSize: 14, color: "var(--ink-500)" }}>
             Vier lezingen. Welke herkent jij?
           </p>
 
@@ -205,13 +191,10 @@ export default function LensPage() {
             <div style={{ textAlign: "center", marginTop: 16 }}>
               <button
                 className="btn"
-                onClick={() => {
-                  trackEvent("lens_reality_check");
-                  setRcOpen(true);
-                }}
-                style={{ background: "#789499", color: "#fff", border: "none" }}
-                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = "#5C7378"; }}
-                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = "#789499"; }}
+                onClick={() => { trackEvent("lens_reality_check"); setRcOpen(true); }}
+                style={{ background: LL.ocean, color: "#fff", border: "none" }}
+                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.background = LL.oceanDark; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}
+                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.background = LL.ocean; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
               >
                 Wil je testen welke lezing klopt?
               </button>
@@ -221,32 +204,20 @@ export default function LensPage() {
           {rcOpen && (
             <div style={{ marginTop: 24 }}>
               {(rcLoading || rcResult) && (
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
-                >
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {rcLoading
                     ? [0, 1, 2].map((i) => (
                         <div key={i} className="card" style={{ marginBottom: 0 }}>
-                          <div className="card-label">
-                            <span className="dot-pulse">Laden</span>
-                          </div>
-                          <p className="card-body" style={{ visibility: "hidden" }}>
-                            &nbsp;
-                          </p>
+                          <div className="card-label"><span className="dot-pulse">Laden</span></div>
+                          <p className="card-body" style={{ visibility: "hidden" }}>&nbsp;</p>
                         </div>
                       ))
                     : rcResult?.questions.map((q, i) => (
                         <div key={i} className="card" style={{ marginBottom: 0 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "flex-start",
-                              gap: 8,
-                            }}
-                          >
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                             <div style={{ flex: 1 }}>
-                              <div className="card-label">
+                              {/* ── card-label in Ocean Blue ── */}
+                              <div className="card-label" style={{ color: LL.ocean }}>
                                 {STYLE_LABEL[q.style] ?? q.style}
                               </div>
                               <p className="card-body">{q.question}</p>
@@ -255,14 +226,10 @@ export default function LensPage() {
                               onClick={() => handleCopy(q.question, i)}
                               title="Kopieer"
                               style={{
-                                background: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                padding: "4px 6px",
-                                borderRadius: 4,
-                                color: copied === i ? "var(--sage)" : "var(--ink-400)",
-                                flexShrink: 0,
-                                marginTop: 2,
+                                background: "none", border: "none", cursor: "pointer",
+                                padding: "4px 6px", borderRadius: 4,
+                                color: copied === i ? LL.ocean : "var(--ink-400)",
+                                flexShrink: 0, marginTop: 2,
                               }}
                             >
                               {copied === i ? "✓" : <ClipboardIcon />}
@@ -276,7 +243,6 @@ export default function LensPage() {
           )}
         </>
       )}
-
     </div>
   );
 }
