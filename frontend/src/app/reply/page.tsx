@@ -151,7 +151,7 @@ function ReplyPageInner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!text.trim()) return;
 
@@ -160,11 +160,13 @@ function ReplyPageInner() {
     setLoading(true);
     setError("");
 
-    const data = await fetchReplies({
-      text,
-      goal,
-    });
-    setResult(data);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!text.trim()) return;
+
+    trackEvent("lp_generate_reply");
+
+    await fetchReplies();
   }
 
   function handleCopy(message: string, index: number) {
