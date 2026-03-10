@@ -33,12 +33,12 @@
   --burgundy-pale:  #F5E8E9;
   --burgundy-dark:  #3D080D;
 
-  --gold:           #F1E194;
+  --gold:           #A67C00;
   --gold-light:     #F9F3C8;
   --gold-dark:      #C8A800;
   --gold-deep:      #8C7400;
 
-/* Accent-aliassen → sage */
+/* Accent-aliassen → burgundy */
   --accent:       var(--burgundy);
   --accent-light: var(--burgundy-pale);
   --accent-glow:  rgba(91,14,20,0.15);
@@ -215,9 +215,10 @@ h1 {
   margin-bottom: 8px;
 }
 
+/* ── GOLD HIGHLIGHT ── */
 h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--gold);
 }
 
 h2 {
@@ -289,15 +290,17 @@ p {
   transform: none !important;
 }
 
-/* Primary — ochre (primaire actie) */
+/* Primary — burgundy (primaire actie) */
 .btn-primary {
   background: var(--burgundy);
   color: #fff;
   box-shadow: var(--shadow-sm);
 }
 
+/* ── GOLD HIGHLIGHT ── */
 .btn-primary:hover:not(:disabled) {
   background: var(--burgundy-dark);
+  color: var(--gold);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -850,7 +853,6 @@ input[type="radio"] {
   color: var(--ink-700);
   min-height: 100vh;
 
-  /* Override dark-mode variables to light */
   --ci-bg: var(--bg);
   --ci-surface: var(--surface);
   --ci-border: rgba(0,0,0,0.08);
@@ -1235,7 +1237,8 @@ input[type="radio"] {
 .lp-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: lp-pulse 2s ease infinite; display: inline-block; }
 @keyframes lp-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
 .lp-display { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(36px, 5vw, 56px); font-weight: 400; line-height: 1.10; letter-spacing: -0.5px; color: var(--ink-900); margin-bottom: 20px; }
-.lp-display em { font-style: italic; color: var(--accent); }
+/* ── GOLD HIGHLIGHT ── */
+.lp-display em { font-style: italic; color: var(--gold); }
 .lp-subtitle { font-size: 16px; color: var(--ink-500); line-height: 1.7; max-width: 440px; margin-bottom: 0; }
 .lp-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 .lp-trust { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
