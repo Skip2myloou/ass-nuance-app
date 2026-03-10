@@ -28,7 +28,7 @@ export const META = {
 export const NAV = {
   brand: "LiteralPause",
   checkin: "Hoe voel ik me?",
-  start: "Start →",
+  start: "Check bericht →",
 } as const;
 
 export const FOOTER = {
@@ -64,7 +64,7 @@ export const HOME = {
     "Voor als sociale berichten langer blijven hangen dan je wilt. Eerst helderheid. Dan actie.",
   ctaPrimary: "Probeer met een bericht →",
   ctaSecondary: "Doe eerst een check-in",
-  trustStrip: "Check-in · Wat staat er? · Betekenis · Doel · Reactie",
+  trustStrip: "Hoe voel ik me? · Wat staat er? · Wat kan het betekenen? · Kies je antwoord",
   body: {
     opener: "Je hoeft niets te fixen. Soms helpt het als iets met je meedenkt.",
     recognizeHeading: "Herken je dit?",
@@ -79,7 +79,7 @@ export const HOME = {
     forHeading: "Voor mensen die",
     for: "Sociale nuance intens ervaren, snel blijven nadenken over berichten, gevoelig zijn voor toon en onderliggende betekenis, en baat hebben bij structuur vóór actie.",
     ctaBottom: "Probeer LiteralPause →",
-    ctaBottomSecondary: "Check-in eerst",
+    ctaBottomSecondary: "Hoe voel ik me eerst?",
   },
 } as const;
 
