@@ -27,10 +27,21 @@
   --ochre-pale:   #FBF3E3;
   --ochre-dark:   #8C6218;
 
-  /* Accent-aliassen → sage */
-  --accent:       var(--sage-dark);
-  --accent-light: var(--sage-pale);
-  --accent-glow:  rgba(61,92,71,0.20);
+  /* ─── Burgundy / Golden Sand palette ─────────────────── */
+  --burgundy:       #5B0E14;
+  --burgundy-light: #8C2029;
+  --burgundy-pale:  #F5E8E9;
+  --burgundy-dark:  #3D080D;
+
+  --gold:           #F1E194;
+  --gold-light:     #F9F3C8;
+  --gold-dark:      #C8A800;
+  --gold-deep:      #8C7400;
+
+/* Accent-aliassen → sage */
+  --accent:       var(--burgundy);
+  --accent-light: var(--burgundy-pale);
+  --accent-glow:  rgba(91,14,20,0.15);
 
   --green:        #22C55E;
   --yellow:       #EAB308;
@@ -280,13 +291,13 @@ p {
 
 /* Primary — ochre (primaire actie) */
 .btn-primary {
-  background: var(--ochre-dark);
+  background: var(--burgundy);
   color: #fff;
   box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #6e4b12;
+  background: var(--burgundy-dark);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -1220,7 +1231,7 @@ input[type="radio"] {
 .lp-hero { min-height: 100svh; display: flex; align-items: center; padding: 100px 0 60px; }
 .lp-hero-inner { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
 @media (min-width: 1024px) { .lp-hero-inner { grid-template-columns: 1fr 1fr; gap: 80px; } }
-.lp-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-light); border: 1px solid var(--accent-glow); color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; border-radius: var(--radius-full); margin-bottom: 24px; }
+.lp-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-light); border: 1px solid var(--burgundy-light); color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px; border-radius: var(--radius-full); margin-bottom: 24px; }
 .lp-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: lp-pulse 2s ease infinite; display: inline-block; }
 @keyframes lp-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
 .lp-display { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(36px, 5vw, 56px); font-weight: 400; line-height: 1.10; letter-spacing: -0.5px; color: var(--ink-900); margin-bottom: 20px; }
