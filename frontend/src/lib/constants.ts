@@ -16,34 +16,7 @@
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
-export const META = {
-  title: "LiteralPause | Van bewustwording naar keuze",
-  description:
-    "Een helder model dat de lagen in communicatie zichtbaar maakt.",
-  lang: "nl",
-} as const;
 
-// ─── Navigatie & Layout ──────────────────────────────────────────────────────
-
-export const NAV = {
-  brand: "LiteralPause",
-  checkin: "Hoe voel ik me?",
-  start: "Check bericht →",
-} as const;
-
-export const FOOTER = {
-  brand: "LiteralPause",
-  tagline: "LensLab is onderdeel van LiteralPause.",
-  privacy: "Privacybeleid",
-} as const;
-
-export const PRIVACY_NOTICE =
-  "Wat je hier invult wordt alleen gebruikt om je antwoord te genereren. We slaan berichten niet op.";
-
-export const BACK = {
-  toHome: "← Terug",
-  toCheckin: "← Terug naar check-in",
-} as const;
 
 // ─── Gedeelde UI-elementen ────────────────────────────────────────────────────
 
