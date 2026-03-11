@@ -15,6 +15,7 @@ DB_PATH = Path("/tmp/charge.db")
 def get_db_path() -> Path:
     """Geeft het pad naar de SQLite database. Overschrijfbaar via env."""
     import os
+
     return Path(os.environ.get("CHARGE_DB_PATH", str(DB_PATH)))
 
 
@@ -55,7 +56,8 @@ def save_log(entry: dict) -> None:
     """
     init_db()
     with get_connection() as conn:
-        conn.execute("""
+        conn.execute(
+            """
             INSERT INTO charge_logs (
                 date, stress, social_count, social_intensity,
                 planning, sleep_hours, sleep_quality,
@@ -75,11 +77,13 @@ def save_log(entry: dict) -> None:
                 planning_tomorrow = excluded.planning_tomorrow,
                 notes             = excluded.notes,
                 created_at        = excluded.created_at
-        """, {
-            **entry,
-            "planning": json.dumps(entry["planning"]),
-            "planning_tomorrow": json.dumps(entry.get("planning_tomorrow") or []),
-        })
+        """,
+            {
+                **entry,
+                "planning": json.dumps(entry["planning"]),
+                "planning_tomorrow": json.dumps(entry.get("planning_tomorrow") or []),
+            },
+        )
 
 
 def get_history(days: int = 7) -> list[dict]:
@@ -89,11 +93,14 @@ def get_history(days: int = 7) -> list[dict]:
     """
     init_db()
     with get_connection() as conn:
-        rows = conn.execute("""
+        rows = conn.execute(
+            """
             SELECT * FROM charge_logs
             ORDER BY date DESC
             LIMIT ?
-        """, (days,)).fetchall()
+        """,
+            (days,),
+        ).fetchall()
 
     entries = []
     for row in reversed(rows):  # oud → nieuw

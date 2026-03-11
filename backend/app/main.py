@@ -15,6 +15,7 @@ from app.schemas import (
     ChargeLogResponse,
     ChargeHistoryResponse,
 )
+from app.services.charge_predict import ChargePredictRequest, ChargePredictResponse
 from app.services.lenslab import analyze
 from app.services.reality_check import get_reality_check
 from app.services.claude import call_claude
@@ -29,7 +30,7 @@ from app.services.prompt_builder import (
     parse_style_response,
 )
 from app.settings import get_settings
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -172,3 +173,28 @@ async def get_charge_history(request: Request, days: int = 7):
 
     entries = get_history(days)
     return ChargeHistoryResponse(entries=entries, count=len(entries))
+
+
+# ── Charge predict ──────────────────────────────────────────────
+
+
+@app.post("/charge/predict", response_model=ChargePredictResponse)
+@limiter.limit("20/minute")
+async def predict_charge(request: Request, body: ChargePredictRequest):
+    """Bereken energiepercentage op basis van loghistory."""
+    from app.services.charge import get_history
+    from app.services.charge_predict import predict_charge, InsufficientDataError
+
+    entries = get_history(body.days)
+
+    try:
+        result = await predict_charge(entries, body.planning_today)
+    except InsufficientDataError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    return ChargePredictResponse(
+        percentage=result.percentage,
+        stem=result.stem,
+        vooruitblik=result.vooruitblik,
+        days_used=len(entries),
+    )

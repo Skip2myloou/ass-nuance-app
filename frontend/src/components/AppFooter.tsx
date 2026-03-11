@@ -12,10 +12,14 @@ const HIDDEN_ON = ["/lens/landing"];
 
 // Per-route tagline
 function getTagline(pathname: string): string {
-  if (pathname.startsWith("/lens")) return "LensLab is onderdeel van LiteralPause.";
+  if (pathname.startsWith("/lens")) return "Van bewustwording naar bewuste keuze.";
   if (pathname.startsWith("/charge")) return "Charge is onderdeel van LiteralPause.";
   return FOOTER.tagline;
 }
+export const BACK = {
+  toHome: "← Terug",
+  toCheckin: "← Terug naar check-in",
+} as const;
 
 export default function AppFooter() {
   const pathname = usePathname();
