@@ -42,7 +42,8 @@ export default function ChargePage() {
   const [notes, setNotes] = useState("");
 
   const [saved, setSaved] = useState(false);
-
+  const [error, setError] = useState<string | null>(null);
+  
   const canSave = socialIntensity !== null && planning.length > 0;
 
   function togglePlanning(option: string) {
@@ -432,6 +433,7 @@ export default function ChargePage() {
                 Kies nog een intensiteit en planning om op te slaan.
               </p>
             )}
+            {error && <div className="error">{error}</div>}
             <button
               className={`ch-save ${canSave ? "ch-save-active" : "ch-save-disabled"}`}
               onClick={handleSave}
