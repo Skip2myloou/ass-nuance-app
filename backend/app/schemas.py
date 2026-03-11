@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -169,3 +169,32 @@ class RealityCheckResult(BaseModel):
 class RealityCheckRequest(BaseModel):
     original: str
     readings: list[LensReading]
+
+
+# ── /charge ─────────────────────────────────────────────────────
+
+
+class ChargeLogEntry(BaseModel):
+    date: str = Field(
+        ...,
+        description="ISO date string YYYY-MM-DD",
+        examples=["2026-03-10"],
+    )
+    stress: int = Field(..., ge=1, le=10)
+    social_count: int = Field(..., ge=0)
+    social_intensity: Literal["licht", "gemiddeld", "zwaar"]
+    planning: list[str] = Field(..., min_length=1)
+    sleep_hours: Optional[float] = Field(default=None, ge=0, le=24)
+    sleep_quality: Optional[Literal["goed", "matig", "slecht"]] = None
+    planning_tomorrow: Optional[list[str]] = None
+    notes: Optional[str] = Field(default=None, max_length=500)
+
+
+class ChargeLogResponse(BaseModel):
+    saved: bool
+    date: str
+
+
+class ChargeHistoryResponse(BaseModel):
+    entries: list[ChargeLogEntry]
+    count: int

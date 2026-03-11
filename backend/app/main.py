@@ -11,6 +11,9 @@ from app.schemas import (
     RepliesResponse,
     StyleRequest,
     StyleResponse,
+    ChargeLogEntry,
+    ChargeLogResponse,
+    ChargeHistoryResponse,
 )
 from app.services.lenslab import analyze
 from app.services.reality_check import get_reality_check
@@ -139,3 +142,33 @@ async def reality_check(
         social=readings_by_lens.get("Social reading lens", ""),
         romantic=readings_by_lens.get("Romantic lens", ""),
     )
+
+
+# ── Charge ──────────────────────────────────────────────────────
+
+
+@app.post("/charge/log", response_model=ChargeLogResponse)
+@limiter.limit("60/minute")
+async def save_charge_log(request: Request, entry: ChargeLogEntry):
+    """Sla een dagelijkse Charge-loginvoer op in SQLite."""
+    from datetime import datetime
+    from app.services.charge import save_log
+
+    record = entry.model_dump()
+    record["created_at"] = datetime.utcnow().isoformat()
+
+    save_log(record)
+    return ChargeLogResponse(saved=True, date=entry.date)
+
+
+@app.get("/charge/history", response_model=ChargeHistoryResponse)
+@limiter.limit("60/minute")
+async def get_charge_history(request: Request, days: int = 7):
+    """Haal de meest recente logs op (standaard 7 dagen)."""
+    from app.services.charge import get_history
+
+    if days < 1 or days > 30:
+        days = 7
+
+    entries = get_history(days)
+    return ChargeHistoryResponse(entries=entries, count=len(entries))

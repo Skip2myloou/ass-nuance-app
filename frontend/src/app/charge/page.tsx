@@ -57,7 +57,7 @@ export default function ChargePage() {
     );
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!canSave) return;
     const entry = {
       date: new Date().toISOString().split("T")[0],
@@ -69,13 +69,18 @@ export default function ChargePage() {
       sleep_quality: sleepQuality?.toLowerCase() ?? null,
       planning_tomorrow: planningTomorrow.map(p => p.toLowerCase()),
       notes: notes.trim() || null,
-      created_at: new Date().toISOString(),
     };
-    // Store locally for now — backend in fase 1b
-    const existing = JSON.parse(localStorage.getItem("charge_logs") ?? "[]");
-    const updated = [...existing.filter((e: {date: string}) => e.date !== entry.date), entry];
-    localStorage.setItem("charge_logs", JSON.stringify(updated));
-    setSaved(true);
+    try {
+      const res = await fetch("/api/charge/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(entry),
+      });
+      if (!res.ok) throw new Error("Opslaan mislukt");
+      setSaved(true);
+    } catch {
+      setError("Er ging iets mis bij het opslaan. Probeer opnieuw.");
+    }
   }
 
   return (
