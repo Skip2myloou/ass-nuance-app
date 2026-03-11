@@ -4,7 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FOOTER } from "@/lib/constants";
 
+// Pagina's met eigen navbar — globale navbar verbergen
+export const HIDE_GLOBAL_NAV_ON = ["/lens", "/lens/landing", "/charge"];
+
+// Pagina's zonder footer
 const HIDDEN_ON = ["/lens/landing"];
+
+// Per-route tagline
+function getTagline(pathname: string): string {
+  if (pathname.startsWith("/lens")) return "LensLab is onderdeel van LiteralPause.";
+  if (pathname.startsWith("/charge")) return "Charge is onderdeel van LiteralPause.";
+  return FOOTER.tagline;
+}
 
 export default function AppFooter() {
   const pathname = usePathname();
@@ -15,7 +26,7 @@ export default function AppFooter() {
       <span className="app-footer-brand">
         Literal<span>Pause</span>
       </span>
-      <span className="app-footer-note">{FOOTER.tagline}</span>
+      <span className="app-footer-note">{getTagline(pathname)}</span>
       <Link href="/privacy" className="app-footer-privacy">
         {FOOTER.privacy}
       </Link>

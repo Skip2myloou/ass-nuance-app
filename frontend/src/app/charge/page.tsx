@@ -43,7 +43,7 @@ export default function ChargePage() {
 
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const canSave = socialIntensity !== null && planning.length > 0;
 
   function togglePlanning(option: string) {
@@ -72,7 +72,7 @@ export default function ChargePage() {
       notes: notes.trim() || null,
     };
     try {
-      const res = await fetch("/api/charge/log", {
+      const res = await fetch("/charge/log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entry),

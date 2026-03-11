@@ -1,7 +1,7 @@
+import AppNav from "@/components/AppNav";
 import type { Metadata } from "next";
-import Link from "next/link";
 import "./globals.css";
-import { META, NAV } from "@/lib/constants";
+import { META } from "@/lib/constants";
 import AppFooter from "@/components/AppFooter";
 
 export const metadata: Metadata = {
@@ -29,19 +29,7 @@ export default function RootLayout({
       </head>
       <body>
         {/* ── Nav ── */}
-        <nav className="app-nav">
-          <Link href="/" className="app-nav-brand">
-            Literal<span>Pause</span>
-          </Link>
-          <div className="app-nav-actions">
-            <Link href="/checkin" className="btn btn-ghost btn-sm">
-              {NAV.checkin}
-            </Link>
-            <Link href="/reply" className="btn btn-primary btn-sm">
-              {NAV.start}
-            </Link>
-          </div>
-        </nav>
+        <AppNav />
 
         {/* ── Page content ── */}
         {children}
