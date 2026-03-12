@@ -37,23 +37,32 @@ export default function InterpretPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function submitRequest() {
     if (!text.trim()) return;
     setLoading(true);
     setError("");
     setResult(null);
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), 15000)
+    );
     try {
-      const data = await interpret(text, checkInState);
+      const data = await Promise.race([interpret(text, checkInState), timeout]);
       data.possible_meanings.sort((a, b) => b.confidence - a.confidence);
       setResult(data);
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : INTERPRET.errorGeneric
+        err instanceof ApiError
+          ? err.message
+          : "Het lukte niet om een antwoord te genereren. Probeer het opnieuw of verkort je bericht."
       );
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    await submitRequest();
   }
 
   const states = INTERPRET.states;
@@ -153,7 +162,19 @@ export default function InterpretPage() {
         </p>
       )}
 
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <div style={{ marginTop: 16 }}>
+          <p className="error">{error}</p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={submitRequest}
+            style={{ marginTop: 12, width: "100%" }}
+          >
+            Probeer opnieuw
+          </button>
+        </div>
+      )}
 
       {/* ── Interpret resultaat ── */}
       {result && (

@@ -206,6 +206,49 @@ export default function LensLandingPage() {
           </div>
         </section>
 
+        {/* In de praktijk */}
+        <section className="lp-section">
+          <div className="lp-container">
+            <div style={{ textAlign: 'center' }}>
+              <div className="lp-eyebrow-plain">In de praktijk</div>
+              <h2 className="lp-heading">Zo werkt het</h2>
+              <p className="lp-muted">Één bericht. Vier lezingen. Welke herken jij?</p>
+            </div>
+            <div className="ll-mockup-wrap">
+              <div>
+                <div className="ll-phone">
+                  <div className="ll-screen">
+                    <span className="mock-label-sm">Bericht</span>
+                    <div className="mock-message-box">
+                      &ldquo;Hee ja hoor. Hele drukke en roerige tijd. Niet veel behoefte en tijd voor contacten.&rdquo;
+                    </div>
+                    <div className="ll-grid">
+                      <div className="ll-card ll-literal">
+                        <div className="ll-card-label">Letterlijk</div>
+                        <p>De persoon geeft aan dat het een drukke periode is met weinig ruimte voor contact.</p>
+                      </div>
+                      <div className="ll-card ll-threat">
+                        <div className="ll-card-label">Dreiging</div>
+                        <p>Er wordt geen opening geboden. Dit kan voelen als een signaal dat contact niet gewenst is.</p>
+                      </div>
+                      <div className="ll-card ll-social">
+                        <div className="ll-card-label">Sociaal</div>
+                        <p>Een gebruikelijke manier om afstand te nemen zonder de ander direct af te wijzen.</p>
+                      </div>
+                      <div className="ll-card ll-romantic">
+                        <div className="ll-card-label">Romantisch</div>
+                        <p>Weinig uitnodigend. Geen tegenvraag, geen moment vooruitgekeken.</p>
+                      </div>
+                    </div>
+                    <div className="ll-footer-text">Vier lezingen. Welke herken jij?</div>
+                  </div>
+                </div>
+                <p className="lp-mock-caption">Vier perspectieven tegelijk, zonder er één te kiezen.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Final CTA */}
         <section className="ll-section" style={{ textAlign: "center" }}>
           <div className="lp-container-narrow">

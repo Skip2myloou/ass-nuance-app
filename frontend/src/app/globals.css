@@ -1415,3 +1415,44 @@ input[type="radio"] {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* =============================== */
+/* LENSLAB PHONE MOCKUP            */
+/* =============================== */
+.ll-mockup-wrap { display: flex; justify-content: center; margin-top: 56px; }
+.ll-phone {
+  background: var(--surface);
+  border-radius: 36px;
+  border: 8px solid var(--ink-900);
+  width: 275px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+.ll-phone::before {
+  content: '';
+  position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 24px;
+  background: var(--ink-900);
+  border-radius: 0 0 16px 16px;
+  z-index: 10;
+}
+.ll-screen {
+  background: linear-gradient(160deg, #FAF9F7 0%, #F0EDE8 100%);
+  padding: 42px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ll-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.ll-card { border-radius: 10px; padding: 10px 11px; border: 1.5px solid transparent; }
+.ll-card p { font-size: 10px; line-height: 1.55; color: inherit; margin: 0; opacity: 0.85; }
+.ll-card-label { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 5px; }
+.ll-literal  { background: #EEF4FF; border-color: #BFDBFE; color: #1D4ED8; }
+.ll-threat   { background: #FEF2F2; border-color: #FECACA; color: #B91C1C; }
+.ll-social   { background: #F0FDF4; border-color: #BBF7D0; color: #15803D; }
+.ll-romantic { background: #FAF5FF; border-color: #E9D5FF; color: #7E22CE; }
+.ll-footer-text { font-size: 10px; color: var(--ink-300); text-align: center; }
+.mock-label-sm { font-size: 9px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--ink-400); }
+.mock-message-box { background: rgba(0,0,0,0.05); border-radius: 8px; padding: 9px 11px; font-size: 11px; line-height: 1.55; color: #1A2226; }
