@@ -104,20 +104,8 @@ export default function ChargeLandingPage() {
           margin-bottom: 8px;
         }
 
-        /* Footer */
-        .ch-footer {
-          border-top: 1px solid ${CH.amberLight};
-          padding: 20px 32px;
-          display: flex; align-items: center; justify-content: space-between;
-          background: ${CH.bg};
-        }
-        .ch-footer-note { font-size: 13px; color: ${CH.muted}; }
-        .ch-footer-link { font-size: 13px; color: ${CH.muted}; text-decoration: none; }
-        .ch-footer-link:hover { color: ${CH.inkMid}; }
-
         @media (max-width: 600px) {
           .ch-nav { padding: 0 20px; }
-          .ch-footer { padding: 20px; }
         }
       `}</style>
 
@@ -173,13 +161,7 @@ export default function ChargeLandingPage() {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="ch-footer">
-          <div>
-            <strong>LiteralPause</strong> Van bewustwording naar bewuste keuze.
-          </div>
-          <Link href="/privacy" className="ch-footer-link">Privacybeleid</Link>
-        </footer>
+
       </div>
     </>
   );

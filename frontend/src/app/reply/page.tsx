@@ -85,6 +85,7 @@ function ReplyPageInner() {
 
   const fetchReplies = useCallback(
     async (goalOverride?: string) => {
+      console.log('fetchReplies called', { text, goal, goalOverride, regulateFirst, allowReplyWhenHigh });
       const activeGoal = goalOverride ?? goal;
 
       if (regulateFirst && !allowReplyWhenHigh && activeGoal !== UNDERSTAND_GOAL) {
@@ -134,6 +135,7 @@ function ReplyPageInner() {
       setResult(null);
       setCopied(null);
       try {
+        console.log('calling replies API', { text, activeGoal });
         const data = await replies(text, activeGoal);
         setResult({ mode: "reply", options: data.options });
         if (goalOverride) setGoal(goalOverride);
@@ -157,18 +159,8 @@ function ReplyPageInner() {
 
     trackEvent("lp_generate_reply");
 
-    setLoading(true);
-    setError("");
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!text.trim()) return;
-
-    trackEvent("lp_generate_reply");
-
     await fetchReplies();
   }
-}
 
   function handleCopy(message: string, index: number) {
     navigator.clipboard.writeText(message);
