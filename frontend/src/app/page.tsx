@@ -161,6 +161,51 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <div className="lp-divider" />
+      <section className="lp-section lp-section-alt">
+        <div className="lp-container">
+
+          <div className="spokes-intro">
+            <div className="lp-eyebrow-plain">Dieper gaan</div>
+            <h2 className="lp-heading">Als je meer wilt weten</h2>
+            <p className="lp-muted">
+              LiteralPause is het startpunt. Twee aanvullende tools zijn er
+              als je een specifieke vraag hebt, niet als verplichte stap.
+            </p>
+          </div>
+
+          <div className="spokes-grid">
+
+            <Link href="/lens" className="spoke-card">
+              <span className="spoke-chip">Verdieping</span>
+              <div className="spoke-icon">🔍</div>
+              <div className="spoke-name">LensLab</div>
+              <div className="spoke-tagline">Hoe leest dit voor anderen?</div>
+              <p className="spoke-desc">
+                Bekijk hetzelfde bericht door vier perspectieven tegelijk:
+                letterlijk, dreigend, sociaal en romantisch.
+                Handig als je begrijpt wat er staat, maar niet snapt
+                waarom iemand anders reageerde dan verwacht.
+              </p>
+              <span className="spoke-link">Open LensLab →</span>
+            </Link>
+
+            <Link href="/charge" className="spoke-card">
+              <span className="spoke-chip">Context</span>
+              <div className="spoke-icon">⚡</div>
+              <div className="spoke-name">Charge</div>
+              <div className="spoke-tagline">Hoeveel heb je vandaag al gegeven?</div>
+              <p className="spoke-desc">
+                Sociaal contact kost energie, maar niet altijd even veel.
+                Charge helpt je patronen te zien in wat je uitput en oplaadt,
+                zodat een lege avond na een drukke dag minder verrassing is.
+              </p>
+              <span className="spoke-link">Open Charge →</span>
+            </Link>
+
+          </div>
+        </div>
+      </section>
       <section className="lp-cta-section">
         <div className="lp-container-narrow" style={{ textAlign: "center" }}>
           <div className="t-label" style={{ color: "rgba(210,190,140,0.8)", marginBottom: 16 }}>Klaar om te beginnen?</div>
