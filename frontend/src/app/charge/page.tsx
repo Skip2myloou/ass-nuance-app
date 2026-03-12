@@ -127,7 +127,10 @@ export default function ChargeLandingPage() {
           <span className="ch-wordmark">
             <span className="ch-wordmark-accent">Charge</span>
           </span>
-          <Link href="/charge/checkin" className="btn btn-amber btn-sm">Begin met loggen →</Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Link href="/" className="ch-nav-back">← Naar LiteralPause</Link>
+            <Link href="/charge/checkin" className="btn btn-amber btn-sm">Begin met loggen →</Link>
+          </div>
         </nav>
 
         {/* Hero */}
@@ -140,7 +143,7 @@ export default function ChargeLandingPage() {
               Na een drukke dag weet je niet altijd waarom je zo leeg bent.
             </h1>
             <p style={{ fontSize: 18, color: CH.inkMid, lineHeight: 1.7, maxWidth: 480, marginBottom: 32 }}>
-              Charge helpt je dat patroon zichtbaar maken. Je logt wat je deed, hoe je sliep, hoe het voelde — en Charge leert voorspellen hoeveel energie een dag je gaat kosten.
+              Charge helpt je dat patroon zichtbaar maken. Je logt wat je deed, hoe je sliep, hoe het voelde. Charge leert voorspellen hoeveel energie een dag je gaat kosten.
             </p>
             <Link href="/charge/checkin" className="btn btn-amber" style={{ fontSize: 16, padding: "15px 32px" }}>
               → Begin met loggen
@@ -172,8 +175,10 @@ export default function ChargeLandingPage() {
 
         {/* Footer */}
         <footer className="ch-footer">
-          <span className="ch-footer-note">Charge is onderdeel van LiteralPause</span>
-          <Link href="/" className="ch-footer-link">← LiteralPause</Link>
+          <div>
+            <strong>LiteralPause</strong> Van bewustwording naar bewuste keuze.
+          </div>
+          <Link href="/privacy" className="ch-footer-link">Privacybeleid</Link>
         </footer>
       </div>
     </>

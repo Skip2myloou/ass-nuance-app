@@ -145,7 +145,10 @@ export default function LensLandingPage() {
           <span className="ll-wordmark">
             <span className="ll-wordmark-accent">Lens</span>Lab
           </span>
-          <Link href="/lens" className="btn btn-aqua btn-sm">Probeer nu →</Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Link href="/" className="ch-nav-back">← Naar LiteralPause</Link>
+            <Link href="/lens" className="btn btn-aqua btn-sm">Probeer nu →</Link>
+          </div>
         </nav>
 
         {/* Hero */}
@@ -215,7 +218,9 @@ export default function LensLandingPage() {
 
         {/* Footer */}
         <footer className="ll-footer">
-          <span className="ll-footer-note">LensLab is onderdeel van LiteralPause</span>
+          <div>
+            <strong>LiteralPause</strong> Van bewustwording naar bewuste keuze.
+          </div>
           <Link href="/privacy" className="ll-footer-link">Privacybeleid</Link>
         </footer>
 
