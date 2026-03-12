@@ -8,7 +8,7 @@ import { FOOTER } from "@/lib/constants";
 export const HIDE_GLOBAL_NAV_ON = ["/lens", "/lens/landing", "/charge"];
 
 // Pagina's zonder footer
-const HIDDEN_ON = ["/lens/landing"];
+const HIDDEN_ON = ["/lens/landing", "/charge"];
 
 // Per-route tagline
 function getTagline(pathname: string): string {
