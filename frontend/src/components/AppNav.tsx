@@ -17,9 +17,6 @@ export default function AppNav() {
         Literal<span>Pause</span>
       </Link>
       <div className="app-nav-actions">
-        <Link href="/checkin" className="btn btn-ghost btn-sm">
-          {NAV.checkin}
-        </Link>
         <Link href="/reply" className="btn btn-primary btn-sm">
           {NAV.start}
         </Link>

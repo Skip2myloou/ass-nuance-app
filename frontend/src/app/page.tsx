@@ -114,7 +114,7 @@ export default function Home() {
                   <p>Plak het bericht. We analyseren wat er staat en wat het kan betekenen.</p>
                   <label>Ontvangen bericht</label>
                   <div className="lp-textarea-mock">"Hey, ja hoor. Hele drukke tijd. Niet veel behoefte aan contacten."</div>
-                  <button className="lp-cta-soft">Analyseer →</button>
+                  <button className="lp-cta-soft" style={{ background: "var(--accent)" }}>Analyseer →</button>
                 </div>
               </div>
               <p className="lp-mock-caption">Plak het bericht. Geen account nodig.</p>
