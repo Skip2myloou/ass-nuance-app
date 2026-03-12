@@ -327,4 +327,5 @@ export const PRIVACY_NOTICE =
 export const BACK = {
   toHome: "← Terug",
   toCheckin: "← Terug naar check-in",
+  toCharge: "← Terug naar Charge",
 } as const;
