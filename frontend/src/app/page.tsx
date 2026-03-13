@@ -113,7 +113,7 @@ export default function Home() {
                   <h3>Wat staat er?</h3>
                   <p>Plak het bericht. We analyseren wat er staat en wat het kan betekenen.</p>
                   <label>Ontvangen bericht</label>
-                  <div className="lp-textarea-mock">"Hey, ja hoor. Hele drukke tijd. Niet veel behoefte aan contacten."</div>
+                  <div className="lp-textarea-mock">&ldquo;Hey, ja hoor. Hele drukke tijd. Niet veel behoefte aan contacten.&rdquo;</div>
                   <button className="lp-cta-soft" style={{ background: "var(--accent)" }}>Analyseer →</button>
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function Home() {
                   <h3>Wat kan het betekenen?</h3>
                   <div className="lp-message-box">
                     <div className="lp-message-tag">Bericht</div>
-                    <p>"Hey, ja hoor. Hele drukke tijd. Niet veel behoefte aan contacten."</p>
+                    <p>&ldquo;Hey, ja hoor. Hele drukke tijd. Niet veel behoefte aan contacten.&rdquo;</p>
                   </div>
                   <div className="lp-option">Ze zijn oprecht overweldigd en trekken zich tijdelijk terug.</div>
                   <div className="lp-option lp-option-selected">Ze voelen zich nu niet genoeg verbonden om energie in dit contact te steken.</div>
@@ -144,15 +144,15 @@ export default function Home() {
                   <div className="lp-goal-mock">Rustig reageren</div>
                   <div className="lp-response-card">
                     <div className="lp-response-type">🎯 Direct</div>
-                    <p>"Begrijpelijk. Laat maar weten als je weer ruimte hebt."</p>
+                    <p>&ldquo;Begrijpelijk. Laat maar weten als je weer ruimte hebt.&rdquo;</p>
                   </div>
                   <div className="lp-response-card lp-response-selected">
                     <div className="lp-response-type">❤️ Warm</div>
-                    <p>"Dat klinkt pittig. Geen druk hoor. Als je tijd hebt, hoor ik het wel."</p>
+                    <p>&ldquo;Dat klinkt pittig. Geen druk hoor. Als je tijd hebt, hoor ik het wel.&rdquo;</p>
                   </div>
                   <div className="lp-response-card">
                     <div className="lp-response-type">😉 Speels</div>
-                    <p>"Snap ik! Neem je tijd. Ik ben er nog als de rust terugkeert."</p>
+                    <p>&ldquo;Snap ik! Neem je tijd. Ik ben er nog als de rust terugkeert.&rdquo;</p>
                   </div>
                 </div>
               </div>

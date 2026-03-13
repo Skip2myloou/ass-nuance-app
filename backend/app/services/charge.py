@@ -86,6 +86,26 @@ def save_log(entry: dict) -> None:
         )
 
 
+def get_log_by_date(date: str) -> dict | None:
+    """
+    Haalt de log op voor een specifieke datum (YYYY-MM-DD).
+    Geeft None terug als er geen log bestaat voor die datum.
+    """
+    init_db()
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT * FROM charge_logs WHERE date = ?", (date,)
+        ).fetchone()
+
+    if row is None:
+        return None
+
+    entry = dict(row)
+    entry["planning"] = json.loads(entry["planning"])
+    entry["planning_tomorrow"] = json.loads(entry.get("planning_tomorrow") or "[]")
+    return entry
+
+
 def get_history(days: int = 7) -> list[dict]:
     """
     Haalt de meest recente N dagen op, gesorteerd van oud naar nieuw

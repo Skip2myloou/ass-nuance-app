@@ -14,7 +14,6 @@ import {
   STYLE_LABELS,
   STYLE_EMOJI,
   HIGH_AROUSAL_LABELS,
-  MEDIUM_AROUSAL_LABELS,
   BACK,
   getConfidenceLabel,
   PRIVACY_NOTICE,
@@ -54,13 +53,31 @@ function ReplyPageInner() {
     return GOALS;
   }, [prefillGoal]);
 
+  const [chargeState, setChargeState] = useState<"calm" | "tense" | "overstimulated">("calm");
+
+  useEffect(() => {
+    async function fetchChargeState() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/charge/today`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.found && data.state) {
+          setChargeState(data.state);
+        }
+      } catch {
+        // netwerk error → chargeState blijft "calm"
+      }
+    }
+    fetchChargeState();
+  }, []);
+
   const [text, setText] = useState(prefillText);
   const [goal, setGoal] = useState(prefillGoal || GOALS[0].value);
   const [result, setResult] = useState<PageResult>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState<number | null>(null);
-  const [refining, setRefining] = useState(false);
+  const [refining, _setRefining] = useState(false);
   const [allowReplyWhenHigh, setAllowReplyWhenHigh] = useState(false);
   const [pauseSeconds, setPauseSeconds] = useState(0);
   const [draft, setDraft] = useState("");
@@ -98,13 +115,7 @@ function ReplyPageInner() {
         setError("");
         setResult(null);
         try {
-          const regulationState =
-            HIGH_AROUSAL_LABELS.has(checkInState ?? "")
-              ? "overstimulated"
-              : MEDIUM_AROUSAL_LABELS.has(checkInState ?? "")
-              ? "tense"
-              : "calm";
-          const data = await interpret(text, regulationState);
+          const data = await interpret(text, chargeState);
           setResult({ mode: "interpret", analysis: data });
         } catch (err) {
           setError(err instanceof Error ? err.message : REPLY.errorAnalyze);
@@ -145,7 +156,7 @@ function ReplyPageInner() {
         setLoading(false);
       }
     },
-    [text, goal, draft, checkInState, regulateFirst, allowReplyWhenHigh, showDraft]
+    [text, goal, draft, chargeState, regulateFirst, allowReplyWhenHigh, showDraft]
   );
 
   useEffect(() => {

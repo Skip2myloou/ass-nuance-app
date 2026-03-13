@@ -198,3 +198,18 @@ class ChargeLogResponse(BaseModel):
 class ChargeHistoryResponse(BaseModel):
     entries: list[ChargeLogEntry]
     count: int
+
+
+class ChargeTodayResponse(BaseModel):
+    found: bool
+    state: Optional[Literal["calm", "tense", "overstimulated"]] = None
+    stress: Optional[int] = None
+
+
+def stress_to_state(stress: int) -> Literal["calm", "tense", "overstimulated"]:
+    if stress <= 3:
+        return "calm"
+    elif stress <= 6:
+        return "tense"
+    else:
+        return "overstimulated"

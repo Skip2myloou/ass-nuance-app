@@ -14,6 +14,8 @@ from app.schemas import (
     ChargeLogEntry,
     ChargeLogResponse,
     ChargeHistoryResponse,
+    ChargeTodayResponse,
+    stress_to_state,
 )
 from app.services.charge_predict import ChargePredictRequest, ChargePredictResponse
 from app.services.lenslab import analyze
@@ -173,6 +175,23 @@ async def get_charge_history(request: Request, days: int = 7):
 
     entries = get_history(days)
     return ChargeHistoryResponse(entries=entries, count=len(entries))
+
+
+@app.get("/charge/today", response_model=ChargeTodayResponse)
+@limiter.limit("60/minute")
+async def get_charge_today(request: Request):
+    """Geeft de Charge-state van vandaag terug als energiecontext voor LiteralPause."""
+    from datetime import date
+    from app.services.charge import get_log_by_date
+
+    today = date.today().isoformat()
+    log = get_log_by_date(today)
+
+    if log is None:
+        return ChargeTodayResponse(found=False)
+
+    state = stress_to_state(log["stress"])
+    return ChargeTodayResponse(found=True, state=state, stress=log["stress"])
 
 
 # ── Charge predict ──────────────────────────────────────────────
