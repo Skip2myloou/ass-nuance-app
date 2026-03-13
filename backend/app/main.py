@@ -15,6 +15,9 @@ from app.schemas import (
     ChargeLogResponse,
     ChargeHistoryResponse,
     ChargeTodayResponse,
+    ChargeVerdiepingEntry,
+    ChargeVerdiepingResponse,
+    ChargeVerdiepingGetResponse,
     stress_to_state,
 )
 from app.services.charge_predict import ChargePredictRequest, ChargePredictResponse
@@ -192,6 +195,31 @@ async def get_charge_today(request: Request):
 
     state = stress_to_state(log["stress"])
     return ChargeTodayResponse(found=True, state=state, stress=log["stress"])
+
+
+@app.post("/charge/verdieping", response_model=ChargeVerdiepingResponse)
+@limiter.limit("60/minute")
+async def save_charge_verdieping(request: Request, entry: ChargeVerdiepingEntry):
+    """Sla signalen en oplaadkeuzes op voor een specifieke datum."""
+    from datetime import datetime
+    from app.services.charge import save_verdieping
+
+    record = entry.model_dump()
+    record["created_at"] = datetime.utcnow().isoformat()
+    save_verdieping(record)
+    return ChargeVerdiepingResponse(saved=True, date=entry.date)
+
+
+@app.get("/charge/verdieping", response_model=ChargeVerdiepingGetResponse)
+@limiter.limit("60/minute")
+async def get_charge_verdieping(request: Request, date: str):
+    """Haal verdiepingsdata op voor een specifieke datum."""
+    from app.services.charge import get_verdieping_by_date
+
+    entry = get_verdieping_by_date(date)
+    if entry is None:
+        return ChargeVerdiepingGetResponse(found=False)
+    return ChargeVerdiepingGetResponse(found=True, entry=entry)
 
 
 # ── Charge predict ──────────────────────────────────────────────

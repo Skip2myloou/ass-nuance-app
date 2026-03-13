@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BACK } from "@/lib/constants";
 
@@ -29,6 +30,8 @@ function getDayLabel() {
 }
 
 export default function ChargeCheckinPage() {
+  const router = useRouter();
+
   // Required fields
   const [stress, setStress] = useState(5);
   const [socialCount, setSocialCount] = useState(0);
@@ -43,6 +46,7 @@ export default function ChargeCheckinPage() {
   const [notes, setNotes] = useState("");
 
   const [saved, setSaved] = useState(false);
+  const [savedDate, setSavedDate] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const canSave = socialIntensity !== null && planning.length > 0;
@@ -79,6 +83,7 @@ export default function ChargeCheckinPage() {
         body: JSON.stringify(entry),
       });
       if (!res.ok) throw new Error("Opslaan mislukt");
+      setSavedDate(entry.date);
       setSaved(true);
     } catch {
       setError("Er ging iets mis bij het opslaan. Probeer opnieuw.");
@@ -285,9 +290,23 @@ export default function ChargeCheckinPage() {
               Je log voor vandaag is bewaard.<br />
               Nog 2 dagen tot je eerste energievoorspelling.
             </p>
+            <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 12 }}>
+              <button
+                onClick={() => router.push(`/charge/verdieping?date=${savedDate}`)}
+                className="ch-save ch-save-active"
+              >
+                Wil je dit verder uitwerken?
+              </button>
+              <button
+                onClick={() => router.push("/")}
+                style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: CH.muted, fontFamily: "inherit", fontWeight: 500 }}
+              >
+                Nee, ik ben klaar
+              </button>
+            </div>
             <button
               onClick={() => setSaved(false)}
-              style={{ marginTop: 24, background: "none", border: "none", cursor: "pointer", fontSize: 13, color: CH.amber, fontFamily: "inherit", fontWeight: 600 }}
+              style={{ marginTop: 16, background: "none", border: "none", cursor: "pointer", fontSize: 12, color: CH.muted, fontFamily: "inherit" }}
             >
               Aanpassen →
             </button>

@@ -206,6 +206,24 @@ class ChargeTodayResponse(BaseModel):
     stress: Optional[int] = None
 
 
+class ChargeVerdiepingEntry(BaseModel):
+    date: str = Field(..., description="ISO date string YYYY-MM-DD", examples=["2026-03-13"])
+    signalen_lichamelijk: list[str] = Field(default_factory=list)
+    signalen_psychisch: list[str] = Field(default_factory=list)
+    signalen_gedrag: list[str] = Field(default_factory=list)
+    opladen: list[str] = Field(default_factory=list)
+
+
+class ChargeVerdiepingResponse(BaseModel):
+    saved: bool
+    date: str
+
+
+class ChargeVerdiepingGetResponse(BaseModel):
+    found: bool
+    entry: Optional[ChargeVerdiepingEntry] = None
+
+
 def stress_to_state(stress: int) -> Literal["calm", "tense", "overstimulated"]:
     if stress <= 3:
         return "calm"

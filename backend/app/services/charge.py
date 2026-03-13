@@ -106,6 +106,71 @@ def get_log_by_date(date: str) -> dict | None:
     return entry
 
 
+def save_verdieping(entry: dict) -> None:
+    """
+    Slaat verdiepingsdata op (signalen + opladen).
+    Bestaande entry voor dezelfde datum wordt overschreven.
+    """
+    init_db()
+    with get_connection() as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS charge_verdieping (
+                date                  TEXT PRIMARY KEY,
+                signalen_lichamelijk  TEXT NOT NULL DEFAULT '[]',
+                signalen_psychisch    TEXT NOT NULL DEFAULT '[]',
+                signalen_gedrag       TEXT NOT NULL DEFAULT '[]',
+                opladen               TEXT NOT NULL DEFAULT '[]',
+                created_at            TEXT NOT NULL
+            )
+        """)
+        conn.execute(
+            """
+            INSERT INTO charge_verdieping (
+                date, signalen_lichamelijk, signalen_psychisch,
+                signalen_gedrag, opladen, created_at
+            ) VALUES (
+                :date, :signalen_lichamelijk, :signalen_psychisch,
+                :signalen_gedrag, :opladen, :created_at
+            )
+            ON CONFLICT(date) DO UPDATE SET
+                signalen_lichamelijk = excluded.signalen_lichamelijk,
+                signalen_psychisch   = excluded.signalen_psychisch,
+                signalen_gedrag      = excluded.signalen_gedrag,
+                opladen              = excluded.opladen,
+                created_at           = excluded.created_at
+            """,
+            {
+                "date":                  entry["date"],
+                "signalen_lichamelijk":  json.dumps(entry["signalen_lichamelijk"]),
+                "signalen_psychisch":    json.dumps(entry["signalen_psychisch"]),
+                "signalen_gedrag":       json.dumps(entry["signalen_gedrag"]),
+                "opladen":               json.dumps(entry["opladen"]),
+                "created_at":            entry["created_at"],
+            },
+        )
+
+
+def get_verdieping_by_date(date: str) -> dict | None:
+    """Haalt verdieping op voor een datum. Geeft None terug als niet gevonden."""
+    try:
+        with get_connection() as conn:
+            row = conn.execute(
+                "SELECT * FROM charge_verdieping WHERE date = ?", (date,)
+            ).fetchone()
+    except Exception:
+        return None
+
+    if row is None:
+        return None
+
+    entry = dict(row)
+    entry["signalen_lichamelijk"] = json.loads(entry["signalen_lichamelijk"])
+    entry["signalen_psychisch"]   = json.loads(entry["signalen_psychisch"])
+    entry["signalen_gedrag"]      = json.loads(entry["signalen_gedrag"])
+    entry["opladen"]              = json.loads(entry["opladen"])
+    return entry
+
+
 def get_history(days: int = 7) -> list[dict]:
     """
     Haalt de meest recente N dagen op, gesorteerd van oud naar nieuw
